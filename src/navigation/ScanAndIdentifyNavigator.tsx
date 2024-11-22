@@ -13,6 +13,7 @@ import UnitInstructionScreen from '../screens/scanbox/UnitInstructionScreen';
 import UnitScannedScreen from '../screens/scanbox/UnitScannedScreen';
 import UnitTableScreen from '../screens/scanbox/UnitTableScreen';
 import ScanKitData from '../screens/scankit/ScanKitData';
+import ScanningScreen from '../screens/scanbox/ScanningScreen';
 
 type ScanAndIdentifyStackParamList = {
   // Home: undefined
@@ -43,6 +44,7 @@ type ScanAndIdentifyStackParamList = {
   SCANKIT: undefined;
   SCANKITITINSTRUCTION: undefined;
   SCANKITDATA: undefined;
+  SCANNINGSCREEN: undefined;
 };
 
 const ScanAndIdentifyStack =
@@ -61,6 +63,10 @@ export const ScanAndIdentifyStackNavigator = () => {
       <ScanAndIdentifyStack.Screen
         name="SINGLEBOXINSTRUCTION"
         component={BoxInstructionScreen}
+      />
+      <ScanAndIdentifyStack.Screen
+        name="SCANNINGSCREEN"
+        component={ScanningScreen}
       />
       <ScanAndIdentifyStack.Screen
         name="SINGLEBOXTABLE"

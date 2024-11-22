@@ -1,50 +1,27 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
-  View,
+  Image,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  ImageSourcePropType,
+  View,
 } from 'react-native';
-import {Image} from 'react-native';
-import Video, {ReactVideoSource} from 'react-native-video';
+import {IMAGE} from '../constants/images';
+import {useNavigation} from '@react-navigation/native';
 
-interface Instruction {
-  step: string;
-}
+const instructions = [
+  {step: 'Pick the box you want to scan'},
+  {step: 'Place the box in a well-lit area'},
+  {step: 'Ensure the box is 10 feet away from other objects'},
+];
 
-interface CarouselItem {
-  title: string;
-  imageSource?: ImageSourcePropType;
-  videoSource?: ReactVideoSource;
-  instructions: Instruction[];
-  backLabel: string;
-  nextLabel: string;
-  onPressFirst?: () => void;
-}
-
-interface CarouselProps {
-  items: CarouselItem[];
-}
-
-function Card({title, imageSource, instructions, videoSource}: CarouselItem) {
+function Card() {
   return (
-    // console.log('Title:', title);
     <View style={styles.card}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>How to Scan</Text>
       <View style={styles.imageContainer}>
-        {videoSource ? (
-          <Video
-            source={videoSource}
-            style={styles.video}
-            resizeMode="cover"
-            volume={0.0}
-            repeat
-          />
-        ) : (
-          <Image source={imageSource} style={styles.image} />
-        )}
+        <Image source={IMAGE.hhttrigerImg} style={styles.image} />
       </View>
       <View style={styles.instructionsContainer}>
         <Text style={styles.instructionsTitle}>Instructions</Text>
@@ -60,52 +37,55 @@ function Card({title, imageSource, instructions, videoSource}: CarouselItem) {
   );
 }
 
-export default function CarouselWithCards({items}: CarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleBack = () => {
-    setCurrentIndex(prevIndex => Math.max(0, prevIndex - 1));
+const ScanbingScreenComponent = ({
+  handleEPC,
+  toView,
+}: {
+  handleEPC: () => void;
+  toView: String;
+}) => {
+  const navigation = useNavigation();
+  const goBack = () => {
+    navigation.goBack();
   };
-
-  const handleNext = () => {
-    setCurrentIndex(prevIndex => Math.min(items.length - 1, prevIndex + 1));
+  const handleViewData = () => {
+    handleEPC();
+    navigation.navigate(toView as never);
   };
-
-  const currentItem = items[currentIndex];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.cardContainer}>
       <View style={styles.content}>
-        <Card {...currentItem} />
+        <Card />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.doneButton}
-          onPress={
-            currentIndex === items.length - 1
-              ? currentItem.onPressFirst
-              : handleNext
-          }>
-          <Text style={styles.doneButtonText}>
-            {currentIndex === items.length - 1
-              ? 'Ready to Scan'
-              : currentItem.nextLabel}
-          </Text>
+        <TouchableOpacity style={styles.doneButton} onPress={handleViewData}>
+          <Text style={styles.doneButtonText}>View Data</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={currentIndex === 0 ? currentItem.onPressFirst : handleBack}>
-          <Text style={styles.backButtonText}>
-            {currentIndex === 0 ? 'Back' : currentItem.backLabel}
-          </Text>
+        <TouchableOpacity style={styles.backButton} onPress={goBack}>
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
+
+export default ScanbingScreenComponent;
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
+    paddingTop: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  subTitle: {fontSize: 16, color: '#99aaa9', fontWeight: '500'},
+  cardContainer: {
     flex: 1,
     justifyContent: 'space-between',
     padding: 20,
@@ -125,7 +105,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: '100%',
   },
-  title: {
+  cardtitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 15,

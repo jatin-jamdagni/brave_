@@ -3,8 +3,11 @@ import InstructionsCarousel from '../../components/carousel/InstructionsCarousel
 import {IMAGE} from '../../constants/images';
 import {StyleSheet, Text, View} from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
+import useBarcodeScanner from '../../hooks/useBarcode';
 
 const DispensoryInstructionScreen = ({navigation}: {navigation: any}) => {
+  const {loading} = useBarcodeScanner();
+
   const goBack = () => {
     navigation.goBack();
   };
@@ -14,7 +17,7 @@ const DispensoryInstructionScreen = ({navigation}: {navigation: any}) => {
   const carouselItems = [
     {
       title: 'Scan Dispensory',
-       imageSource: IMAGE.ScanMedicineInstruction1,
+      imageSource: IMAGE.ScanMedicineInstruction1,
       instructions: [
         {step: 'Pick the Dispensory you want to scan'},
         {step: 'Place the Dispensory in a well-lit area'},

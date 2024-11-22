@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import UHFBarcodeModule from '../../hooks/useUHFSdk';
+import UHFBarcodeModule from './useUHFSdk';
 
 const useBarcodeScanner = () => {
   const [scannedData, setScannedData] = useState<string | null>(null);

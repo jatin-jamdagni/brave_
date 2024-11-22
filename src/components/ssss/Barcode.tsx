@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import useBarcodeScanner from './useBarcode';
+import useBarcodeScanner from '../../hooks/useBarcode';
 
 const BarcodeTest = () => {
   const {loading} = useBarcodeScanner();

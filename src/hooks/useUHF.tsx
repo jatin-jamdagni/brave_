@@ -1,10 +1,8 @@
 import {useState, useEffect, useCallback} from 'react';
-import UHFBarcodeModule from '../../hooks/useUHFSdk';
-
-type ScannedData = Record<string, number>;
+import UHFBarcodeModule from './useUHFSdk';
 
 const useUHFScanner = () => {
-  const [scannedData, setScannedData] = useState<ScannedData>({});
+  const [scannedData, setScannedData] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   const initializeUHF = useCallback(async () => {
@@ -26,14 +24,13 @@ const useUHFScanner = () => {
           console.log('event onUHFScanned', event);
           const data = event.scannedData;
 
+          // Update scannedData with unique keys
           setScannedData(prevData => {
-            const newData = {...prevData};
-            if (newData[data]) {
-              newData[data] += 1;
-            } else {
-              newData[data] = 1;
+            // Add the scanned data only if it's not already in the list
+            if (!prevData.includes(data)) {
+              return [...prevData, data];
             }
-            return newData;
+            return prevData;
           });
         },
       );

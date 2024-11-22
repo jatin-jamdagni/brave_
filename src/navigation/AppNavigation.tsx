@@ -33,7 +33,7 @@ const AppNavigation = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading || isLoading) {
+  if (loading) {
     return <SplashScreen />;
   }
 

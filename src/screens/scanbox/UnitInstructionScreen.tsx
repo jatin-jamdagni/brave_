@@ -14,7 +14,7 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
   const carouselItems = [
     {
       title: 'Scan Unit',
-       imageSource: IMAGE.scanUnitInstruction1,
+      imageSource: IMAGE.scanUnitInstruction1,
       instructions: [
         {step: 'Pick the box you want to scan'},
         {step: 'Place the box in a well-lit area'},
@@ -25,7 +25,7 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Position the Unit',
-       imageSource: IMAGE.scanUnitInstruction2,
+      imageSource: IMAGE.scanUnitInstruction2,
       instructions: [
         {step: 'Ensure the box is 10 feet away from other objects'},
         {step: 'Center the box in your camera view'},
@@ -35,7 +35,7 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Position the Unit',
-       imageSource: IMAGE.hhttrigerImg,
+      videoSource: IMAGE.scanUnitInstruction3,
       instructions: [
         {step: 'Ensure the box is 10 feet away from other objects'},
         {step: 'Center the box in your camera view'},
@@ -45,7 +45,8 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Scan the Unit',
-      videoSource: IMAGE.scanUnitInstruction3,
+      imageSource: IMAGE.hhttrigerImg,
+
       instructions: [
         {step: 'Hold your device steady'},
         {step: 'Tap the scan button when ready'},

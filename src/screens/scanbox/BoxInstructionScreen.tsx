@@ -9,7 +9,9 @@ const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
     navigation.goBack();
   };
   const handleViewData = () => {
-    navigation.navigate('SINGLEBOXTABLE');
+    navigation.navigate('SCANNINGSCREEN', {
+      toView: 'SINGLEBOXTABLE',
+    });
   };
   const carouselItems = [
     {
@@ -35,22 +37,13 @@ const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Position the HHT',
-      imageSource: IMAGE.hhttrigerImg,
+      videoSource: IMAGE.singleBoxInstruction3,
+
       instructions: [
         {step: 'Ensure the box is 10 feet away from other objects'},
         {step: 'Center the box in your camera view'},
       ],
       backLabel: 'Previous',
-      nextLabel: 'Continue',
-    },
-    {
-      title: 'Scan the box',
-      videoSource: IMAGE.singleBoxInstruction3,
-      instructions: [
-        {step: 'Hold your device steady'},
-        {step: 'Tap the scan button when ready'},
-      ],
-      backLabel: 'Back',
       nextLabel: 'Finish',
       onPressFirst: handleViewData,
     },

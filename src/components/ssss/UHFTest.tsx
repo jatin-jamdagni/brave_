@@ -6,7 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import useUHFScanner from './useUHF';
+import useUHFScanner from '../../hooks/useUHF';
 
 const UHFTest = () => {
   // const [scannedData, setScannedData] = useState<{[key: string]: number}>({});
@@ -61,10 +61,10 @@ const UHFTest = () => {
   const {scannedData, loading} = useUHFScanner();
 
   const renderScannedData = () => {
-    return Object.keys(scannedData).map(key => (
+    return scannedData.map(key => (
       <View key={key} style={styles.tableRow}>
         <Text style={styles.tableCell}>{key}</Text>
-        <Text style={styles.tableCell}>{scannedData[key]}</Text>
+        {/* <Text style={styles.tableCell}>{scannedData[key]}</Text> */}
       </View>
     ));
   };

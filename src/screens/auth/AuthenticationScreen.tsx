@@ -6,6 +6,10 @@ import {useAuth} from '../../hooks/useAuth';
 import {IMAGE} from '../../constants/images';
 import {Color} from '../../constants/color';
 import {CustomButton} from '../../components/ui/CustomButton';
+import {
+  createMainMasterTable,
+  createModuleTable,
+} from '../../services/databaseService';
 
 const AuthenticationScreen = () => {
   const {
@@ -29,6 +33,10 @@ const AuthenticationScreen = () => {
     }
   };
 
+  useEffect(() => {
+    createMainMasterTable();
+    createModuleTable();
+  }, []);
   useEffect(() => {
     if (androidId && !userToken) {
       login(androidId);

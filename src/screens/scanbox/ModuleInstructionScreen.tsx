@@ -35,7 +35,7 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Position the Module',
-      imageSource: IMAGE.hhttrigerImg,
+      videoSource: IMAGE.scanModuleInstruction3,
       instructions: [
         {step: 'Ensure the box is 10 feet away from other objects'},
         {step: 'Center the box in your camera view'},
@@ -45,7 +45,8 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Scan the module',
-      videoSource: IMAGE.scanModuleInstruction3,
+      imageSource: IMAGE.hhttrigerImg,
+
       instructions: [
         {step: 'Hold your device steady'},
         {step: 'Tap the scan button when ready'},

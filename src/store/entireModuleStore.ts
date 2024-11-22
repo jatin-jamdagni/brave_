@@ -6,6 +6,8 @@ interface ModuleState {
   setEpcid: (epcId: string[]) => void;
   clearEpcid: () => void;
   getSelectedModule: () => typeof modules;
+  barcode: string;
+  getBarCode: (barcode: string) => void;
 }
 
 export const useModuleStore = create<ModuleState>((set, get) => ({
@@ -17,4 +19,6 @@ export const useModuleStore = create<ModuleState>((set, get) => ({
     const currentEpcIds = get().epcId;
     return modules.filter(module => currentEpcIds.includes(module.epcId));
   },
+  barcode: '',
+  getBarCode: barcode => set({barcode}),
 }));

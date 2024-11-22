@@ -7,12 +7,8 @@ import React, {
   useEffect,
 } from 'react';
 import * as Keychain from 'react-native-keychain';
-import {
-  fetchMasterData,
-  storeMasterData,
-  getMasterData,
-} from '../services/dataService';
-import {openDatabase} from '../services/databaseService';
+import {fetchMasterData} from '../services/dataService';
+import {clearDatabaseTables} from '../services/databaseService';
 
 interface AuthContextData {
   userToken: string | null;
@@ -32,6 +28,10 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
   const [error, setError] = useState<Error | null>(null);
   const [syncProgress, setSyncProgress] = useState(0);
 
+  // if (!isDbReady) {
+  //   return <LoadingScreen />;
+  // }
+
   const retrieveToken = async () => {
     try {
       const credentials = await Keychain.getGenericPassword();
@@ -42,7 +42,7 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
         console.log('No token stored');
       }
     } catch (error) {
-      console.log('Could not retrieve token:', error);
+      console.error('Could not retrieve token:', error);
     }
   };
 
@@ -52,34 +52,32 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
       setError(null);
 
       const response = await fetch(
-        `http://192.168.146.83:2324/api/user/${androidId}`,
+        `https://awlapkbackend.awlinternational.com/api/user/${androidId}`,
       );
+
       if (!response.ok) {
         throw new Error('Authentication failed');
       }
 
       const data = await response.json();
       const token = data.token;
-      console.log('this is response', data);
 
       await Keychain.setGenericPassword('user', token);
       setUserToken(token);
       console.log('Token stored successfully!');
 
-      // Fetch and store data only if it doesn't exist in SQLite
-      const db = await openDatabase();
-      const existingData = await getMasterData(db);
-      if (!existingData || existingData.length === 0) {
-        const masterData = await fetchMasterData(token);
-        await storeMasterData(db, masterData, progress => {
-          setSyncProgress(progress);
+      await fetchMasterData(token)
+        .then(() => {
+          console.log('Master data fetched successfully!');
+        })
+        .catch(error => {
+          console.error('Error fetching master data:', error);
         });
-      }
     } catch (error) {
       setError(
         error instanceof Error ? error : new Error('Authentication failed'),
       );
-      console.log('Could not store token or fetch data:', error);
+      console.error('Error during login:', error);
     } finally {
       setIsLoading(false);
     }
@@ -91,10 +89,12 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
       await Keychain.resetGenericPassword();
       setUserToken(null);
       setSyncProgress(0);
-      await clearDatabase();
-      console.log('Token cleared and database reset successfully!');
+
+      await clearDatabaseTables();
+
+      console.log('Logged out and database cleared successfully!');
     } catch (error) {
-      console.log('Could not clear token or reset database:', error);
+      console.error('Error during logout:', error);
     } finally {
       setIsLoading(false);
     }
@@ -103,14 +103,12 @@ export const AuthProvider = ({children}: {children: ReactNode}) => {
   const clearDatabase = async () => {
     try {
       setIsLoading(true);
-      const db = await openDatabase();
-      await db.transaction(tx => {
-        tx.executeSql('DELETE FROM mainMasterData');
-        tx.executeSql('DELETE FROM moduleMasterData');
-      });
+
+      await clearDatabaseTables();
+
       console.log('Database cleared successfully');
     } catch (error) {
-      console.log('Could not clear database:', error);
+      console.error('Error clearing database:', error);
     } finally {
       setIsLoading(false);
     }

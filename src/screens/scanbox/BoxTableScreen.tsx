@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomizableTableComponent from '../../components/DataTable';
+import {useModuleStore} from '../../store/entireModuleStore';
 const columns = [
   {key: 'sNo', title: 'S.No', width: 1},
   {key: 'kitName', title: 'Kit Name', width: 3},
@@ -32,6 +33,8 @@ const tableData = [
 ];
 
 const BoxTableScreen = ({navigation}: {navigation: any}) => {
+  const {epcId} = useModuleStore();
+  console.log('these are epcids', epcId);
   return (
     <CustomizableTableComponent
       title="Scan single Table"

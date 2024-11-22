@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import {useState, useCallback} from 'react';
 import DeviceInfo from 'react-native-device-info';
 
 export const useAndroidId = () => {
@@ -22,6 +22,5 @@ export const useAndroidId = () => {
     }
   }, []);
 
-  return { isLoading, androidId, error, fetchAndroidId };
+  return {isLoading, androidId, error, fetchAndroidId};
 };
-

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AppNavigation from './src/navigation/AppNavigation';
 import {AuthProvider} from './src/hooks/useAuth';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
+
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.gestureHandler}>
