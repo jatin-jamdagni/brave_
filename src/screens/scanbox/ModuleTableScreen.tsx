@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CustomizableTableComponent from '../../components/DataTable';
+import {useModuleStore} from '../../store/entireModuleStore';
+import {getMissingAndExpriedEPCFromMasterData} from '../../services/databaseService';
+
 const columns = [
   {key: 'mNo', title: 'M.No', width: 1},
   {key: 'kitName', title: 'Kit Name', width: 3},
@@ -7,27 +10,53 @@ const columns = [
   {key: 'fromBoxes', title: 'From Box', width: 2},
 ];
 
-const tableData = [
-  {mNo: 1, kitName: 'First Aid Kit', qty: 5, fromBoxes: '1, 3, 6'},
-  {mNo: 2, kitName: 'Tool Kit', qty: 2, fromBoxes: '2'},
-  {mNo: 3, kitName: 'Emergency Kit', qty: 4, fromBoxes: '1, 5'},
-  {mNo: 4, kitName: 'Survival Kit', qty: 7, fromBoxes: '4, 7'},
-  {mNo: 5, kitName: 'Camping Kit', qty: 3, fromBoxes: '6'},
-  {mNo: 6, kitName: 'Hiking Kit', qty: 6, fromBoxes: '1, 2, 3'},
-  {mNo: 7, kitName: 'Fishing Kit', qty: 1, fromBoxes: '8'},
-  {mNo: 8, kitName: 'Repair Kit', qty: 8, fromBoxes: '9, 10'},
-  {mNo: 9, kitName: 'Medical Kit', qty: 2, fromBoxes: '3'},
-];
+const ModuleTableScreen = ({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) => {
+  const {moduleEpcIds} = route.params;
+  const {epcId} = useModuleStore();
+  const [tableData, setTableData] = useState<any[]>([]);
 
-const ModuleTableScreen = ({navigation}: {navigation: any}) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const results: any = await getMissingAndExpriedEPCFromMasterData({
+          epcIDS: epcId,
+          moduleIds: moduleEpcIds,
+        });
+
+        console.log('Fetched data:', results);
+
+        // Transform results to match tableData structure
+        const transformedData = results.map((item: any, index: any) => ({
+          mNo: index + 1,
+          kitName: item.PACK_NAME,
+          qty: item.TOTAL_COUNT,
+          fromBoxes: item.CC_NOs, // Already in comma-separated format
+        }));
+
+        setTableData(transformedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    console.log('moduleEpcIds epcId:', epcId);
+    fetchData();
+  }, [epcId, moduleEpcIds]);
+
   return (
     <CustomizableTableComponent
-      title="Scaned Module Table"
-      subtitle="These are exipired kit in Selected Module"
+      title="Scanned Module Table"
+      subtitle="These are expired or missing kits in Selected Module"
       columns={columns}
       data={tableData}
       onDone={() => navigation.navigate('HOME')}
-      onBack={() => navigation.navigate('SCANBOX')}
+      onBack={() => navigation.goBack()}
     />
   );
 };

@@ -1,14 +1,15 @@
 import {StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ModuleSelector from '../../components/module/ModuleSelector';
 import AppWrapper from '../../components/AppWrapper';
 import {modules} from '../../constants/module';
 import BackHeader from '../../components/ui/BackHeader';
 import {useModuleStore} from '../../store/entireModuleStore';
+import {getModulesDisplayData} from '../../services/databaseService';
 
 const ModuleSelectionScreen = ({navigation}: {navigation: any}) => {
   const {setEpcid, epcId, clearEpcid} = useModuleStore();
-
+  const [modules, setModules] = useState<any[]>([]);
   const handleStartScan = (selectedModules: any) => {
     clearEpcid();
     console.log(' before entring', epcId);
@@ -20,6 +21,20 @@ const ModuleSelectionScreen = ({navigation}: {navigation: any}) => {
   const handleGoBack = async () => {
     navigation.goBack();
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const results: any = await getModulesDisplayData();
+
+        setModules(results);
+      } catch (error) {
+        console.error('Error fetching box table data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <AppWrapper style={styles.container}>

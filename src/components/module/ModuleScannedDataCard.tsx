@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import {getContrastingColor} from '../../hooks/useContrastingColor';
+import {getModulesBoxCountNoData} from '../../services/databaseService';
 
 type ModuleData = {
   boxQuantity: number;
@@ -20,11 +22,20 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
   module,
   onCheckModule,
 }) => {
-  const renderBox = ({item}: {item: number}) => (
+  const [box, setBox] = useState<ModuleScannedDataCardProps[]>();
+  useEffect(() => {
+    const fetchId = async () => {
+      const results: any = await getModulesBoxCountNoData(module.epcId);
+      setBox(results);
+    };
+
+    fetchId();
+  }, []);
+
+  const textColor = getContrastingColor(module.colorHex);
+  const renderBox = ({item}: {item: any}) => (
     <View style={[styles.box, {backgroundColor: module.colorHex}]}>
-      <Text style={styles.boxText}>
-        {item <= module.boxQuantity ? item : ''}
-      </Text>
+      <Text style={[styles.boxText, {color: textColor}]}>{item.CC_NO}</Text>
     </View>
   );
 
@@ -37,8 +48,9 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
       <Text style={styles.moduleName}>{module.name}</Text>
 
       <View style={styles.flatListContainer}>
+        <Text style={styles.totalBoxes}>Total Boxes: {module.boxQuantity}</Text>
         <FlatList
-          data={[...Array(module.boxQuantity).keys()].map(i => i + 1)}
+          data={box}
           renderItem={renderBox}
           keyExtractor={item => item.toString()}
           numColumns={7}
@@ -49,8 +61,10 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
 
       <TouchableOpacity
         style={[styles.checkButton, {backgroundColor: module.colorHex}]}
-        onPress={() => onCheckModule(module.id)}>
-        <Text style={styles.checkButtonText}>Check Module {module.id}</Text>
+        onPress={() => onCheckModule(module.epcId)}>
+        <Text style={[styles.checkButtonText, {color: textColor}]}>
+          {module.name}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -71,9 +85,10 @@ const styles = StyleSheet.create({
     height: 200,
   },
   moduleName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    textAlign: 'center',
   },
   totalBoxes: {
     fontSize: 14,

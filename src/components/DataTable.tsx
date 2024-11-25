@@ -87,12 +87,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 5,
     fontWeight: 'bold',
+    marginTop: 10,
   },
   subtitle: {
     fontSize: 14,
+    fontWeight: 'bold',
     color: '#666',
   },
   tableContainer: {

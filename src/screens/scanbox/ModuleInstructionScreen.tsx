@@ -9,7 +9,9 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
     navigation.goBack();
   };
   const handleViewData = () => {
-    navigation.navigate('ENTIREMODULESCANNED');
+    navigation.navigate('SCANNINGSCREEN', {
+      toView: 'ENTIREMODULESCANNED',
+    });
   };
   const carouselItems = [
     {
@@ -41,17 +43,6 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
         {step: 'Center the box in your camera view'},
       ],
       backLabel: 'Previous',
-      nextLabel: 'Continue',
-    },
-    {
-      title: 'Scan the module',
-      imageSource: IMAGE.hhttrigerImg,
-
-      instructions: [
-        {step: 'Hold your device steady'},
-        {step: 'Tap the scan button when ready'},
-      ],
-      backLabel: 'Back',
       nextLabel: 'Finish',
       onPressFirst: handleViewData,
     },

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {ModuleTypes} from '../../types';
 import {IMAGE} from '../../constants/images';
+import {getContrastingColor} from '../../hooks/useContrastingColor';
 
 type ModuleSelectorProps = {
   modules: ModuleTypes[];
@@ -31,30 +32,37 @@ export default function ModuleSelector({
   }, []);
 
   const renderModule: ListRenderItem<ModuleTypes> = useCallback(
-    ({item}) => (
-      <TouchableOpacity
-        onPress={() => toggleModule(item.epcId)}
-        style={[
-          styles.moduleItem,
-          {backgroundColor: item.colorHex},
-          selectedModules.includes(item.epcId) && styles.selectedModule,
-        ]}
-        accessibilityRole="checkbox"
-        accessibilityState={{checked: selectedModules.includes(item.epcId)}}
-        accessibilityLabel={`${item.name} module, ${
-          selectedModules.includes(item.epcId) ? 'selected' : 'unselected'
-        }`}>
-        <Image
-          source={item.image || IMAGE.PlaceholderImage}
-          style={styles.moduleImage}
-          accessibilityIgnoresInvertColors={true}
-        />
-        <View style={styles.textContainer}>
-          <Text style={styles.moduleName}>{item.name}</Text>
-          <Text style={styles.moduleDescription}>{item.description}</Text>
-        </View>
-      </TouchableOpacity>
-    ),
+    ({item}) => {
+      const textColor = getContrastingColor(item.colorHex);
+
+      return (
+        <TouchableOpacity
+          key={item.epcId}
+          onPress={() => toggleModule(item.epcId)}
+          style={[
+            styles.moduleItem,
+            {
+              backgroundColor: item.colorHex,
+            },
+            ,
+            selectedModules.includes(item.epcId) && styles.selectedModule,
+          ]}
+          accessibilityRole="checkbox"
+          accessibilityState={{checked: selectedModules.includes(item.epcId)}}
+          accessibilityLabel={`${item.name} module, ${
+            selectedModules.includes(item.epcId) ? 'selected' : 'unselected'
+          }`}>
+          <View style={styles.textContainer}>
+            <Text style={[styles.moduleName, {color: textColor}]}>
+              {item.name}
+            </Text>
+            <Text style={[styles.moduleDescription, {color: textColor}]}>
+              {item.description}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    },
     [selectedModules, toggleModule],
   );
 
@@ -103,10 +111,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    height: 90,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.1,
+    // shadowRadius: 4,
   },
   moduleImage: {
     width: 80,
@@ -119,15 +128,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   moduleName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     marginLeft: 16,
-    color: '#333',
+    color: 'white',
   },
   moduleDescription: {
     marginTop: 4,
     fontSize: 16,
-    color: '#777',
+    color: '#f8f8f8',
     marginLeft: 16,
     fontWeight: '400',
   },

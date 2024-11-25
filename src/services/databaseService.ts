@@ -1,5 +1,6 @@
 import SQLite, {enablePromise} from 'react-native-sqlite-storage';
 import {MainMasterData, ModuleMasterData} from '../types';
+import {useModuleStore} from '../store/entireModuleStore';
 
 export const db = SQLite.openDatabase({
   name: 'appDatabase.db',
@@ -158,13 +159,39 @@ export const insertMainMasterData = async ({
   );
 };
 
-export const getModulesData = async () => {
+export const getModulesDisplayData = async () => {
+  return new Promise(async (resolve, reject) => {
+    (await db).transaction(tx => {
+      const query = `SELECT id, moduleEPC as epcId, moduleName as name, moduleDescription as description, moduleImage as image, moduleColor as colorHex , moduleBoxCount as boxQuantity  FROM main_module_data ORDER BY moduleEPC ASC;`;
+      const result: any = [];
+      tx.executeSql(
+        query,
+        [],
+
+        (_, secondResult) => {
+          const secondRows = secondResult.rows;
+          for (let i = 0; i < secondRows.length; ++i) {
+            result.push(secondRows.item(i));
+          }
+
+          resolve(result);
+        },
+        (_, error) => {
+          console.error('Error executing second query:', error);
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const getMasterData = async () => {
   (await db).transaction(tx => {
     tx.executeSql(
-      `SELECT * FROM main_module_data;`,
+      `SELECT * FROM main_master_data where CC_EPCNO = ;`,
       [],
       (_, result) => {
-        const rows = result.rows.raw(); // Get all rows as an array of objects
+        const rows = result.rows.raw();
       },
       (_, error) => {
         console.error(
@@ -176,21 +203,72 @@ export const getModulesData = async () => {
   });
 };
 
-export const getMasterData = async () => {
-  (await db).transaction(tx => {
-    tx.executeSql(
-      `SELECT * FROM main_master_data;`,
-      [],
-      (_, result) => {
-        const rows = result.rows.raw(); // Get all rows as an array of objects
-      },
-      (_, error) => {
-        console.error(
-          'Error fetching data from main_master_data table:',
-          error,
-        );
-      },
-    );
+export const getSingleBoxFromMasterData = async (epcIDS: string[]) => {
+  const formattedEpcIds = epcIDS.map(id => `'${id}'`).join(', ');
+
+  return new Promise(async (resolve, reject) => {
+    (await db).transaction(tx => {
+      const firstQuery = `SELECT DISTINCT CC_EPCNO FROM main_master_data WHERE PACK_EPC IN (${formattedEpcIds}) ORDER BY CC_EPCNO ASC;`;
+
+      const results: {firstQueryResult: any[]; secondQueryResult: any[]} = {
+        firstQueryResult: [],
+        secondQueryResult: [],
+      };
+
+      tx.executeSql(
+        firstQuery,
+        [],
+        (_, result) => {
+          const rows = result.rows;
+          for (let i = 0; i < rows.length; ++i) {
+            results.firstQueryResult.push(rows.item(i));
+          }
+
+          const ccEpcNo = results.firstQueryResult[0].CC_EPCNO;
+
+          const secondQuery = `
+            SELECT 
+              COUNT(DISTINCT CASE WHEN PACK_EPC IN (${formattedEpcIds}) THEN PACK_EPC END) AS ACQTY, 
+              COUNT(DISTINCT PACK_EPC) AS EXPQTY, 
+              CC_NAME, 
+              PACK_NAME, 
+              PACK_EXPIRY, 
+              CC_NO 
+            FROM 
+              main_master_data 
+            WHERE 
+              CC_EPCNO = ? 
+            GROUP BY  
+              CC_NAME,  
+              PACK_NAME,  
+              PACK_EXPIRY,  
+              CC_NO;
+          `;
+
+          tx.executeSql(
+            secondQuery,
+            [ccEpcNo],
+
+            (_, secondResult) => {
+              const secondRows = secondResult.rows;
+              for (let i = 0; i < secondRows.length; ++i) {
+                results.secondQueryResult.push(secondRows.item(i));
+              }
+
+              resolve(results);
+            },
+            (_, error) => {
+              console.error('Error executing second query:', error);
+              reject(error);
+            },
+          );
+        },
+        (_, error) => {
+          console.error('Error executing first query:', error);
+          reject(error);
+        },
+      );
+    });
   });
 };
 
@@ -205,4 +283,85 @@ export const clearDatabaseTables = async () => {
   console.log('Tables cleared successfully');
 
   return Promise.resolve();
+};
+
+export const getModulesBoxCountNoData = async (moduleId: string) => {
+  return new Promise(async (resolve, reject) => {
+    (await db).transaction(tx => {
+      const query = `SELECT CC_NO, MC_EPC FROM main_master_data WHERE MC_EPC = '${moduleId}' GROUP BY MC_EPC, CC_NO;`;
+      const result: any = [];
+      tx.executeSql(
+        query,
+        [],
+
+        (_, secondResult) => {
+          const secondRows = secondResult.rows;
+          for (let i = 0; i < secondRows.length; ++i) {
+            result.push(secondRows.item(i));
+          }
+
+          resolve(result);
+        },
+        (_, error) => {
+          console.error('Error executing second query:', error);
+          reject(error);
+        },
+      );
+    });
+  });
+};
+
+export const getMissingAndExpriedEPCFromMasterData = async ({
+  epcIDS,
+  moduleIds,
+}: {
+  epcIDS: string[];
+  moduleIds: string[];
+}) => {
+  const formattedEpcIds = epcIDS.map(id => `'${id}'`).join(', ');
+  const formattedModuleIds = Array.isArray(moduleIds)
+    ? moduleIds.map(id => `'${id}'`).join(', ')
+    : `'${moduleIds}'`;
+  return new Promise(async (resolve, reject) => {
+    (await db).transaction(tx => {
+      const query = `SELECT 
+                    PACK_NAME,
+                    GROUP_CONCAT(DISTINCT CC_NO) AS CC_NOs,
+                    COUNT(DISTINCT PACK_EPC) AS TOTAL_COUNT,
+                    PACK_EXPIRY,
+                    CASE 
+                    WHEN PACK_EPC NOT IN (${formattedEpcIds}) THEN 'MISSING'
+                    WHEN DATE(PACK_EXPIRY) < DATE('now') THEN 'EXPIRED'
+                    END AS PACK_STATUS
+                    FROM main_master_data
+                    WHERE 
+                    MC_EPC IN (${formattedModuleIds})
+                    AND (
+                    PACK_EPC NOT IN (${formattedEpcIds}) OR 
+                    DATE(PACK_EXPIRY) < DATE('now')
+                    )
+                    GROUP BY 
+                    PACK_CODE, PACK_STATUS, PACK_EXPIRY
+                    HAVING 
+                    PACK_STATUS IN ('MISSING', 'EXPIRED');`;
+      const result: any = [];
+      tx.executeSql(
+        query,
+        [],
+
+        (_, secondResult) => {
+          const secondRows = secondResult.rows;
+          for (let i = 0; i < secondRows.length; ++i) {
+            result.push(secondRows.item(i));
+          }
+
+          resolve(result);
+        },
+        (_, error) => {
+          console.error('Error executing second query:', error);
+          reject(error);
+        },
+      );
+    });
+  });
 };

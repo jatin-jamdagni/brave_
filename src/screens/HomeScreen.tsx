@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import AppWrapper from '../components/AppWrapper';
 import CustomCard from '../components/ui/CustomCard';
@@ -7,6 +7,7 @@ import {IMAGE} from '../constants/images';
 import {useAuth} from '../hooks/useAuth';
 import BackHeader from '../components/ui/BackHeader';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useModuleStore} from '../store/entireModuleStore';
 
 const HomeScreen = ({navigation}: {navigation: any}) => {
   const {logout} = useAuth();
@@ -15,6 +16,11 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
     await logout();
     // navigation.navigate('AUTHENTICATION' as never);
   };
+
+  const {clearEpcid} = useModuleStore();
+  useEffect(() => {
+    clearEpcid();
+  }, []);
 
   return (
     <AppWrapper>

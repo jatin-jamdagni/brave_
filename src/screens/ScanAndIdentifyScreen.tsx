@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import AppWrapper from '../components/AppWrapper';
 import CustomCard from '../components/ui/CustomCard';
@@ -6,12 +6,17 @@ import {IMAGE} from '../constants/images';
 
 import BackHeader from '../components/ui/BackHeader';
 import {ScrollView} from 'react-native-gesture-handler';
-import { Color } from '../constants/color';
+import {Color} from '../constants/color';
+import {useModuleStore} from '../store/entireModuleStore';
 
 const ScanAndIdentify = ({navigation}: {navigation: any}) => {
   const handleLogout = async () => {
     navigation.goBack();
   };
+  const {clearEpcid} = useModuleStore();
+  useEffect(() => {
+    clearEpcid();
+  }, []);
 
   return (
     <AppWrapper>
@@ -51,7 +56,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 15,
   },
-  imageStyle: {height: 120, backgroundColor: Color.darkGray, objectFit: 'cover'},
+  imageStyle: {
+    height: 120,
+    backgroundColor: Color.darkGray,
+    objectFit: 'cover',
+  },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
