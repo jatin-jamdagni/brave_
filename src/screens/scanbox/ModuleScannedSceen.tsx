@@ -6,6 +6,7 @@ import {CustomButton} from '../../components/ui/CustomButton';
 import DataHeader from '../../components/ui/DataHeader';
 import {useModuleStore} from '../../store/entireModuleStore';
 import {getModulesDisplayData} from '../../services/databaseService';
+import {Color} from '../../constants/color';
 
 const ModuleScannedScreen = ({navigation}: {navigation: any}) => {
   const {getSelectedModule} = useModuleStore();
@@ -28,7 +29,6 @@ const ModuleScannedScreen = ({navigation}: {navigation: any}) => {
 
   const moduleEpcIds = data.map(item => item.epcId);
 
-  console.log('moduleEpcIds', moduleEpcIds);
   const handleCheckModule = (id: string) => {
     navigation.navigate('ENTIREMODULETABLE', {
       moduleEpcIds: id,
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
     padding: 16,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: Color.background,
     elevation: 5,
   },
   buttonStyleBack: {

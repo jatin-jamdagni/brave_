@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Image} from 'react-native';
 import Video, {ReactVideoSource} from 'react-native-video';
+import {Color} from '../../constants/color';
 
 interface Instruction {
   step: string;
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: Color.black,
     borderRadius: 10,
     padding: 16,
     shadowColor: '#000',
@@ -129,10 +130,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: Color.primary,
   },
   subtitle: {
     fontSize: 14,
-    color: '#666',
+    color: Color.secondary,
     marginBottom: 16,
   },
   imageContainer: {
@@ -160,6 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: Color.accent,
   },
   instructionsList: {
     maxHeight: 120,
@@ -167,6 +170,7 @@ const styles = StyleSheet.create({
   instructionItem: {
     fontSize: 14,
     marginBottom: 4,
+    color: Color.lightGray,
   },
   buttonContainer: {
     marginTop: 16,

@@ -10,6 +10,7 @@ import SplashScreen from '../screens/auth/SplashScreen';
 import AuthenticationScreen from '../screens/auth/AuthenticationScreen';
 import {useAuth} from '../hooks/useAuth';
 import LoadingScreen from '../screens/LoadingScreen';
+import UHFReloadSuccess from '../sdk/medicineUse';
 
 type RootStackParamList = {
   ONBOARDING: undefined;
@@ -23,7 +24,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigation = () => {
   const [loading, setLoading] = useState(true);
-  const {userToken, isLoading} = useAuth();
+  const {userToken, isLoading, logout} = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,9 +38,19 @@ const AppNavigation = () => {
     return <SplashScreen />;
   }
 
+  const onStateChangeHandler = async () => {
+    const isNavigation = await UHFReloadSuccess();
+
+    if (isNavigation) {
+      logout();
+    }
+  };
+
+  // onStateChange = {onStateChangeHandler};
+
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
+      <NavigationContainer onStateChange={onStateChangeHandler}>
         <RootStack.Navigator
           screenOptions={{
             headerShown: false,

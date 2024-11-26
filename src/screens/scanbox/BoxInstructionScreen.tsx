@@ -1,12 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import InstructionsCarousel from '../../components/carousel/InstructionsCarousel';
 import {IMAGE} from '../../constants/images';
 import {StyleSheet, Text, View} from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
+import {useModuleStore} from '../../store/entireModuleStore';
 
 const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
+  const {setEpcid} = useModuleStore();
+
+  useEffect(() => {
+    setEpcid([]);
+  }, []);
+
   const goBack = () => {
-    navigation.goBack();
+    navigation.navigate('SCANBOX');
   };
   const handleViewData = () => {
     navigation.navigate('SCANNINGSCREEN', {

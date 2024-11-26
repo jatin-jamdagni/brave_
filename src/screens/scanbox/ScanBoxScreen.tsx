@@ -13,7 +13,7 @@ const ScanBoxScreen = ({navigation}: {navigation: any}) => {
   const {clearEpcid} = useModuleStore();
 
   const handleGoBack = async () => {
-    navigation.goBack();
+    navigation.navigate('SCANANDIDENTIFY');
   };
   const handleNavigationToModule = () => {
     clearEpcid();

@@ -7,6 +7,7 @@ import {
   ImageSourcePropType,
   Image,
 } from 'react-native';
+import {Color} from '../../constants/color';
 
 interface BoxData {
   id: string;
@@ -28,13 +29,20 @@ const Box = ({data}: BoxProps) => {
 
 interface KitConfigurationProps {
   kitName: string;
-  totalQuantity?: number;
+  totalQuantity?: number; // Optional, calculated dynamically if not provided
   boxes: BoxData[];
-
   kitImage: ImageSourcePropType;
 }
 
-const ScanKitDataCard = ({kitName, boxes, kitImage}: KitConfigurationProps) => {
+const ScanKitDataCard = ({
+  kitName,
+  totalQuantity,
+  boxes,
+  kitImage,
+}: KitConfigurationProps) => {
+  // Dynamically calculate total quantity if not explicitly provided
+  const calculatedTotalQuantity = totalQuantity || boxes.length;
+
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -44,10 +52,12 @@ const ScanKitDataCard = ({kitName, boxes, kitImage}: KitConfigurationProps) => {
       />
       <View style={styles.content}>
         <Text style={styles.input}>{kitName}</Text>
-        <Text style={styles.label}>Total Quantity: {boxes.length}</Text>
+        <Text style={styles.label}>
+          Total Quantity: {calculatedTotalQuantity}
+        </Text>
         <Text style={styles.description}>
-          This kit is available in {boxes.length} boxed and boxes are the
-          following:
+          This kit is available in {boxes.length} boxes. The boxes are as
+          follows:
         </Text>
         <View style={styles.boxContainer}>
           {boxes.map(box => (
@@ -62,6 +72,7 @@ const ScanKitDataCard = ({kitName, boxes, kitImage}: KitConfigurationProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Color.background, // Light background for better aesthetics
   },
   imageContainer: {
     width: '100%',
@@ -69,70 +80,72 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: Color.background,
     borderTopEndRadius: 8,
+    borderTopStartRadius: 8,
+    marginTop: -8, // Align with image
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: Color.primary,
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: Color.white,
+
     borderRadius: 10,
     padding: 10,
-    color: 'black',
+    color: Color.success,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 18,
     borderWidth: 1,
+    borderColor: Color.accent,
     marginBottom: 10,
   },
   label: {
     fontSize: 18,
     marginBottom: 10,
+    fontWeight: '600',
+    color: Color.secondary,
   },
   description: {
     marginBottom: 10,
+    fontSize: 16,
+    color: Color.lightGray,
   },
   boxContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginBottom: 20,
   },
   box: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
-    borderRadius: 10,
+    margin: 5,
+    borderRadius: 8,
     borderWidth: 2,
+    borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
   },
   boxText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  doneButton: {
-    backgroundColor: '#2196F3',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  backButton: {
-    backgroundColor: '#1976D2',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
 

@@ -10,14 +10,12 @@ export default function DispensoryDataScreen({navigation}: {navigation: any}) {
 
   const handleDone = () => {
     // Handle the done action here
-    console.log('Done pressed');
     navigation.navigate('HOME');
   };
 
   const handleUndo = () => {
     // Handle the undo action here
     navigation.goBack();
-    console.log('Undo pressed');
   };
 
   return (
@@ -32,8 +30,12 @@ export default function DispensoryDataScreen({navigation}: {navigation: any}) {
         <Text style={styles.detailsText}>
           Following are the details of the medicine:
         </Text>
-        <Text style={styles.medicineInfo}>Previous Quantity: {action === 'dispense' ? '180' : '170'}</Text>
-        <Text style={styles.medicineInfo}>Present Quantity: {action === 'dispense' ? '170' : '180'}</Text>
+        <Text style={styles.medicineInfo}>
+          Previous Quantity: {action === 'dispense' ? '180' : '170'}
+        </Text>
+        <Text style={styles.medicineInfo}>
+          Present Quantity: {action === 'dispense' ? '170' : '180'}
+        </Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
             <Text style={styles.doneButtonText}>Done</Text>

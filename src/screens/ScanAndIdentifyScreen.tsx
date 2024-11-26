@@ -11,7 +11,7 @@ import {useModuleStore} from '../store/entireModuleStore';
 
 const ScanAndIdentify = ({navigation}: {navigation: any}) => {
   const handleLogout = async () => {
-    navigation.goBack();
+    navigation.navigate('HOME');
   };
   const {clearEpcid} = useModuleStore();
   useEffect(() => {

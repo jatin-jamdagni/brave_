@@ -37,7 +37,7 @@ export default function ModuleSelector({
 
       return (
         <TouchableOpacity
-          key={item.epcId}
+          key={item.arrangeIndex}
           onPress={() => toggleModule(item.epcId)}
           style={[
             styles.moduleItem,

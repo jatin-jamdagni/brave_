@@ -6,20 +6,20 @@ import {modules} from '../../constants/module';
 import BackHeader from '../../components/ui/BackHeader';
 import {useModuleStore} from '../../store/entireModuleStore';
 import {getModulesDisplayData} from '../../services/databaseService';
+import {Color} from '../../constants/color';
 
 const ModuleSelectionScreen = ({navigation}: {navigation: any}) => {
   const {setEpcid, epcId, clearEpcid} = useModuleStore();
   const [modules, setModules] = useState<any[]>([]);
   const handleStartScan = (selectedModules: any) => {
     clearEpcid();
-    console.log(' before entring', epcId);
 
     setEpcid(selectedModules);
 
     navigation.navigate('ENTIREMODULEINSTRUCTION');
   };
   const handleGoBack = async () => {
-    navigation.goBack();
+    navigation.navigate('SCANBOX');
   };
 
   useEffect(() => {
@@ -54,6 +54,6 @@ export default ModuleSelectionScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: Color.background,
   },
 });

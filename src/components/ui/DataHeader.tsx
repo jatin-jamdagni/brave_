@@ -1,5 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
+import {Color} from '../../constants/color';
 
 const DataHeader = ({title, subTitle}: {title: string; subTitle: string}) => {
   return (
@@ -23,9 +24,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 5,
     fontWeight: 'bold',
+    color: Color.primary,
   },
   subtitle: {
     fontSize: 14,
-    color: '#666',
+    color: Color.secondary,
   },
 });

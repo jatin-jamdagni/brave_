@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import {getContrastingColor} from '../../hooks/useContrastingColor';
 import {getModulesBoxCountNoData} from '../../services/databaseService';
+import {Color} from '../../constants/color';
+import {useNavigation} from '@react-navigation/native';
 
 type ModuleData = {
   boxQuantity: number;
@@ -22,6 +24,7 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
   module,
   onCheckModule,
 }) => {
+  const navigation: any = useNavigation();
   const [box, setBox] = useState<ModuleScannedDataCardProps[]>();
   useEffect(() => {
     const fetchId = async () => {
@@ -30,13 +33,21 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
     };
 
     fetchId();
-  }, []);
+  }, [module.epcId]);
+
+  const handleBox = (ccno: string) => {
+    navigation.navigate('SINGLEBOXTABLE', {
+      ccno: ccno,
+    });
+  };
 
   const textColor = getContrastingColor(module.colorHex);
   const renderBox = ({item}: {item: any}) => (
-    <View style={[styles.box, {backgroundColor: module.colorHex}]}>
+    <TouchableOpacity
+      onPress={() => handleBox(item.CC_NO)}
+      style={[styles.box, {backgroundColor: module.colorHex}]}>
       <Text style={[styles.boxText, {color: textColor}]}>{item.CC_NO}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -72,7 +83,7 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: Color.black,
     borderRadius: 10,
     borderWidth: 2,
     padding: 16,
@@ -89,10 +100,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     textAlign: 'center',
+    color: Color.primary,
   },
   totalBoxes: {
     fontSize: 14,
     marginBottom: 12,
+    color: Color.secondary,
   },
   flatListContainer: {
     height: 82,
@@ -112,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   boxText: {
-    color: 'black',
+    color: Color.primary,
     fontWeight: 'bold',
   },
   checkButton: {

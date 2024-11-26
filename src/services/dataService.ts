@@ -16,7 +16,6 @@ export const fetchMasterData = async (token: string) => {
       throw new Error('Failed to fetch master data');
     }
 
-    console.log(response.data.mainMasterData);
     // Insert data into SQLite tables
     await insertMainMasterData({data: response.data.mainMasterData});
     console.log('Main Master Data Inserted');

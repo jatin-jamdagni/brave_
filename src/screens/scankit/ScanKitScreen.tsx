@@ -6,11 +6,15 @@ import AppWrapper from '../../components/AppWrapper';
 
 const ScanKitInstructions = ({navigation}: {navigation: any}) => {
   const goBack = () => {
-    navigation.goBack();
+    navigation.navigate('SCANANDIDENTIFY');
   };
+
   const handleViewData = () => {
-    navigation.navigate('SCANKITDATA');
+    navigation.navigate('SCANNINGSCREEN', {
+      toView: 'SCANKITDATA',
+    });
   };
+
   const carouselItems = [
     {
       title: 'Scan Kit',
@@ -30,7 +34,7 @@ const ScanKitInstructions = ({navigation}: {navigation: any}) => {
         {step: 'Hold your device steady'},
         {step: 'Tap the scan button when ready'},
       ],
-      backLabel: 'Back',
+      backLabel: 'Previous',
       nextLabel: 'Finish',
       onPressFirst: handleViewData,
     },

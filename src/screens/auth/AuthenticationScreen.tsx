@@ -37,6 +37,7 @@ const AuthenticationScreen = () => {
     createMainMasterTable();
     createModuleTable();
   }, []);
+
   useEffect(() => {
     if (androidId && !userToken) {
       login(androidId);

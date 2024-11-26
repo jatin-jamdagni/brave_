@@ -1,7 +1,7 @@
 import * as Keychain from 'react-native-keychain';
 import {Alert, BackHandler} from 'react-native';
 
-const setAppExpiryDate = async (dateString: any) => {
+const setAppModuleConnectionDate = async (dateString: any) => {
   try {
     await Keychain.setGenericPassword('lastNavigation', dateString, {
       service: 'com.myapp.lastNavigation', // Unique identifier
@@ -12,9 +12,9 @@ const setAppExpiryDate = async (dateString: any) => {
   }
 };
 
-setAppExpiryDate('2024-11-20T13:55:00');
+setAppModuleConnectionDate('2024-11-30T07:55:00');
 
-const checkAppExpiry = async () => {
+const UHFReloadSuccess = async () => {
   try {
     const credentials = await Keychain.getGenericPassword({
       service: 'com.myapp.lastNavigation',
@@ -36,7 +36,7 @@ const checkAppExpiry = async () => {
         return false;
       }
     } else {
-      console.log('No Last Navigation date set.');
+      console.log('No Last Navigation data set.');
       return false;
     }
   } catch (error) {
@@ -45,4 +45,4 @@ const checkAppExpiry = async () => {
   }
 };
 
-export default checkAppExpiry;
+export default UHFReloadSuccess;

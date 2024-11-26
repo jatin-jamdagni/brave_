@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
-import ScanbingScreenComponent from '../../components/ScaningScreenComponent';
+import ScanningScreenComponent from '../../components/ScaningScreenComponent';
 import {useModuleStore} from '../../store/entireModuleStore';
 import useUHFScanner from '../../hooks/useUHF';
 
@@ -23,15 +23,6 @@ const ScanningScreen = ({route}: any) => {
   useEffect(() => {
     if (scannedData.length > 0) {
       setLoading(true);
-
-      // Filter scannedData for unique entries not already in uniqueScannedData
-      // const newUniqueData = scannedData.filter(
-      //   item => !uniqueScannedData.includes(item),
-      // );
-
-      // if (newUniqueData.length > 0) {
-      //   setUniqueScannedData(prev => [...prev, ...newUniqueData]);
-      // }
 
       if (loadingTimeoutRef.current) {
         clearTimeout(loadingTimeoutRef.current);
@@ -68,7 +59,11 @@ const ScanningScreen = ({route}: any) => {
           </View>
         )}
 
-        <ScanbingScreenComponent handleEPC={handleEPCData} toView={toView} />
+        <ScanningScreenComponent
+          isScannedData={scannedData.length === 0 ? true : false}
+          handleEPC={handleEPCData}
+          toView={toView}
+        />
       </View>
     </AppWrapper>
   );

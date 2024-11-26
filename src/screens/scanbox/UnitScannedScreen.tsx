@@ -1,48 +1,48 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {modules} from '../../constants/module';
 import ScanedUnitCard from '../../components/unit/ScannedUnitCard';
 import AppWrapper from '../../components/AppWrapper';
 import {CustomButton} from '../../components/ui/CustomButton';
 import InfoMessage from '../../components/InfoMessage';
+import {useModuleStore} from '../../store/entireModuleStore';
+import {getScannedUnitBoxesDataFromMainMaster} from '../../services/databaseService';
+import {Color} from '../../constants/color';
 
 const UnitScannedScreen = ({navigation}: {navigation: any}) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [boxes, setBoxes] = useState(() => {
-    let boxesData: any[] = [];
-    let boxCounter = 1;
+  const {epcId} = useModuleStore();
+  const [boxes, setBoxes] = useState<any[]>([]);
 
-    modules.forEach(module => {
-      for (let i = 0; i < module.boxQuantity; i++) {
-        if (boxCounter <= 55) {
-          boxesData.push({
-            id: `${module.id}-${i + 1}`,
-            moduleId: module.id,
-            boxNumber: boxCounter,
-            color: module.colorHex,
-            isFound: Math.random() > 0.1,
-          });
-          boxCounter++;
-        }
-      }
+  useEffect(() => {
+    const fetch = async () => {
+      const result: any = await getScannedUnitBoxesDataFromMainMaster(epcId);
+
+      const transformedBoxes = result
+        .sort((a: any, b: any) => a.mcepc.localeCompare(b.mcepc))
+        .map((box: any) => ({
+          id: `${box.ccno}`,
+          moduleId: box.mcepc,
+          boxNumber: box.ccno,
+          color: box.color,
+          isFound: box.status === 'active',
+          status: box.status,
+        }));
+
+      setBoxes(transformedBoxes);
+    };
+
+    fetch();
+  }, [epcId]);
+
+  const handleBoxPress = (boxData: string) => {
+    navigation.navigate('SINGLEBOXTABLE', {
+      ccno: boxData,
     });
-
-    return boxesData;
-  });
-
-  const handleBoxPress = (boxData: any) => {
-    console.log(
-      `Box ${boxData.boxNumber} from Module ${boxData.moduleId} pressed`,
-    );
-    navigation.navigate('SINGLEBOXTABLE');
-
-    // Add your logic here
   };
+
   return (
     <AppWrapper>
       <ScanedUnitCard boxes={boxes} onBoxPress={handleBoxPress} />
-
-      <InfoMessage message="Click on box to view status of selected box." />
+      <InfoMessage message="Click on box to view the status of the selected box." />
       <View style={styles.customButtonContainer}>
         <CustomButton
           buttonStyle={styles.buttonStyleBack}
@@ -65,13 +65,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
     padding: 16,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: Color.black,
     elevation: 5,
   },
   buttonStyleBack: {
-    backgroundColor: '#e6f2ff',
+    backgroundColor: Color.black,
     width: 100,
     borderWidth: 2,
     borderColor: '#007AFF',

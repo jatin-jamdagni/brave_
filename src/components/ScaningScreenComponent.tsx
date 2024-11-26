@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {IMAGE} from '../constants/images';
 import {useNavigation} from '@react-navigation/native';
+import {Color} from '../constants/color';
 
 const instructions = [
   {step: 'Pick the box you want to scan'},
@@ -37,12 +38,14 @@ function Card() {
   );
 }
 
-const ScanbingScreenComponent = ({
+const ScanningScreenComponent = ({
   handleEPC,
   toView,
+  isScannedData = true,
 }: {
   handleEPC: () => void;
   toView: String;
+  isScannedData: boolean;
 }) => {
   const navigation = useNavigation();
   const goBack = () => {
@@ -59,8 +62,18 @@ const ScanbingScreenComponent = ({
         <Card />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.doneButton} onPress={handleViewData}>
-          <Text style={styles.doneButtonText}>View Data</Text>
+        <TouchableOpacity
+          style={[styles.doneButton, {opacity: isScannedData ? 0.6 : 1}]}
+          onPress={handleViewData}
+          disabled={isScannedData} // Move this inside the TouchableOpacity
+        >
+          <Text
+            style={[
+              styles.doneButtonText,
+              {color: isScannedData ? Color.black : Color.primary},
+            ]}>
+            {isScannedData ? 'Press Trigger To start Scan' : 'View Data'}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.backButton} onPress={goBack}>
           <Text style={styles.backButtonText}>Back</Text>
@@ -70,7 +83,7 @@ const ScanbingScreenComponent = ({
   );
 };
 
-export default ScanbingScreenComponent;
+export default ScanningScreenComponent;
 
 const styles = StyleSheet.create({
   container: {
@@ -80,22 +93,24 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333333',
+    color: Color.primary,
     marginBottom: 10,
     textAlign: 'center',
   },
-  subTitle: {fontSize: 16, color: '#99aaa9', fontWeight: '500'},
+  subTitle: {fontSize: 16, color: Color.lightGray, fontWeight: '500'},
   cardContainer: {
     flex: 1,
     justifyContent: 'space-between',
     padding: 20,
+    backgroundColor: Color.background,
   },
   content: {
     flex: 1,
     alignItems: 'center',
+    // backgroundColor,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: Color.black,
     borderRadius: 10,
     padding: 16,
     shadowColor: '#000',
@@ -109,10 +124,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: Color.secondary,
   },
   subtitle: {
     fontSize: 14,
-    color: '#666',
+    color: Color.accent,
     marginBottom: 16,
   },
   imageContainer: {
@@ -135,11 +151,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     paddingTop: 16,
+    color: Color.accent,
   },
   instructionsTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: Color.accent,
   },
   instructionsList: {
     maxHeight: 120,
@@ -147,6 +165,7 @@ const styles = StyleSheet.create({
   instructionItem: {
     fontSize: 14,
     marginBottom: 4,
+    color: Color.lightGray,
   },
   buttonContainer: {
     marginTop: 16,

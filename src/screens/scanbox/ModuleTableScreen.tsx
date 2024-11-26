@@ -29,8 +29,6 @@ const ModuleTableScreen = ({
           moduleIds: moduleEpcIds,
         });
 
-        console.log('Fetched data:', results);
-
         // Transform results to match tableData structure
         const transformedData = results.map((item: any, index: any) => ({
           mNo: index + 1,
@@ -45,7 +43,6 @@ const ModuleTableScreen = ({
       }
     };
 
-    console.log('moduleEpcIds epcId:', epcId);
     fetchData();
   }, [epcId, moduleEpcIds]);
 

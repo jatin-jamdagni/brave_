@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {Color} from '../constants/color';
 
 interface ColumnDefinition {
   key: string;
@@ -30,24 +31,42 @@ const TableHeader = ({data}: {data: ColumnDefinition[]}) => {
     </View>
   );
 };
-export default function CustomizableTableComponent({
+
+const CustomizableTableComponent: React.FC<TableProps> = ({
   title,
   subtitle,
   columns,
   data,
   onDone,
   onBack,
-}: TableProps) {
-  const renderItem = ({item}: {item: any}) => (
-    <View style={styles.tableRow}>
-      {columns.map(column => (
-        <Text
-          key={column.key}
-          style={[styles.cell, {flex: column.width}, column.style]}>
-          {item[column.key]}
-        </Text>
-      ))}
-    </View>
+}) => {
+  const renderItem = useCallback(
+    ({item}: {item: any}) => (
+      <View style={styles.tableRow}>
+        {columns.map(column => (
+          <Text
+            key={column.key}
+            style={[styles.cell, {flex: column.width}, column.style]}>
+            {item[column.key]}
+          </Text>
+        ))}
+      </View>
+    ),
+    [columns],
+  );
+
+  const keyExtractor = useCallback(
+    (item: any, index: number) => item.id || index.toString(),
+    [],
+  );
+
+  const getItemLayout = useCallback(
+    (data: any, index: number) => ({
+      length: 50, // height of a row
+      offset: 50 * index, // distance from the top
+      index,
+    }),
+    [],
   );
 
   return (
@@ -61,7 +80,12 @@ export default function CustomizableTableComponent({
         <FlatList
           data={data}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
+          getItemLayout={getItemLayout}
+          initialNumToRender={10} // Adjust as needed
+          maxToRenderPerBatch={10} // Limit number of items rendered in a batch
+          windowSize={5} // Set window size to control how many items in memory
+          removeClippedSubviews={true} // Unmount off-screen items
         />
       </View>
       <View style={styles.buttonContainer}>
@@ -74,13 +98,13 @@ export default function CustomizableTableComponent({
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: 'white',
+    backgroundColor: Color.background,
   },
   header: {
     marginBottom: 20,
@@ -91,11 +115,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: 'bold',
     marginTop: 10,
+    textAlign: 'center',
+    color: Color.primary,
   },
   subtitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#666',
+    textAlign: 'center',
+    color: Color.secondary,
   },
   tableContainer: {
     flex: 1,
@@ -106,7 +133,7 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: 'row',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: Color.lightGray,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
@@ -114,6 +141,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: Color.white,
   },
   tableRow: {
     flexDirection: 'row',
@@ -124,6 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     padding: 8,
     textAlign: 'center',
+    color: Color.white,
   },
   buttonContainer: {
     marginTop: 16,
@@ -150,3 +179,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default CustomizableTableComponent;

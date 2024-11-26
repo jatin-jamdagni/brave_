@@ -8,6 +8,7 @@ export type ModuleTypes = {
   colorHex: string;
   description: string;
   epcId: string;
+  arrangeIndex: string;
 };
 
 export interface MainMasterData {

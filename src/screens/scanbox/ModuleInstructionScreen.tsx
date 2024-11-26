@@ -1,12 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import InstructionsCarousel from '../../components/carousel/InstructionsCarousel';
 import {IMAGE} from '../../constants/images';
 import {StyleSheet, Text, View} from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
+import {useModuleStore} from '../../store/entireModuleStore';
+import {Color} from '../../constants/color';
 
 const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
+  const {setEpcid} = useModuleStore();
+
+  useEffect(() => {
+    setEpcid([]);
+  }, []);
+
   const goBack = () => {
-    navigation.goBack();
+    navigation.navigate('SCANBOX');
   };
   const handleViewData = () => {
     navigation.navigate('SCANNINGSCREEN', {
@@ -66,6 +74,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
   },
-  title: {fontSize: 18, fontWeight: 'bold', color: '#333333', marginBottom: 6},
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Color.primary,
+    marginBottom: 6,
+  },
   subTitle: {fontSize: 16, color: '#99aaa9', fontWeight: '500'},
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import {Color} from '../constants/color';
 
 interface InfoMessageProps {
   message: string;
@@ -21,10 +22,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: Color.black,
     borderRadius: 10,
     padding: 8,
-    marginHorizontal:16,
+    marginHorizontal: 16,
     marginVertical: 25,
     borderWidth: 1,
     borderColor: '#BFDBFE',
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
   message: {
     flex: 1,
     fontSize: 16,
-    color: '#1E40AF',
+    color: Color.warning,
     fontWeight: '500',
   },
 });
