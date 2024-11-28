@@ -45,7 +45,6 @@ export default function ScanKitData({navigation}: {navigation: any}) {
     const fetch = async () => {
       const response: ResponseData[] | any =
         await getSingleKitFromUnitFromMainMaster(epcId);
-
       if (response && response.length > 0) {
         const processedKits = processResponseData(response);
         setKits(processedKits);
@@ -88,13 +87,15 @@ export default function ScanKitData({navigation}: {navigation: any}) {
           kitImage={IMAGE.PlaceholderImage}
         />
       ) : (
-        <Text style={styles.noDataText}>No data available</Text>
+        <Text style={styles.noDataText}>Kit not found.</Text>
       )}
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
-          <Text style={styles.doneButtonText}>Done</Text>
-        </TouchableOpacity>
+        {activeKit && (
+          <TouchableOpacity style={styles.doneButton} onPress={handleDone}>
+            <Text style={styles.doneButtonText}>Done</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
@@ -102,21 +103,22 @@ export default function ScanKitData({navigation}: {navigation: any}) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Color.background,
+    justifyContent: 'center', // Centers content vertically
+    alignItems: 'center', // Centers content horizontally
   },
   noDataText: {
-    textAlign: 'center',
-    marginTop: 20,
     fontSize: 18,
     color: Color.error,
+    textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 16,
     padding: 16,
+    width: '100%',
   },
   doneButton: {
     backgroundColor: Color.background,

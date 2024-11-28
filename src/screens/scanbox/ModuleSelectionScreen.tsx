@@ -40,8 +40,8 @@ const ModuleSelectionScreen = ({navigation}: {navigation: any}) => {
     <AppWrapper style={styles.container}>
       <BackHeader
         onPress={handleGoBack}
-        title="Scan box"
-        subTitle="Something also need here..."
+        title="Select Module"
+        subTitle="Select modules you want to scan"
         buttonLabel="Back"
       />
       <ModuleSelector modules={modules} onStartScan={handleStartScan} />

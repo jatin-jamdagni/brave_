@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import {getContrastingColor} from '../../hooks/useContrastingColor';
 import {getModulesBoxCountNoData} from '../../services/databaseService';
 import {Color} from '../../constants/color';
@@ -25,13 +32,14 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
   onCheckModule,
 }) => {
   const navigation: any = useNavigation();
-  const [box, setBox] = useState<ModuleScannedDataCardProps[]>();
+  const [box, setBox] = useState<any[]>([]);
+
   useEffect(() => {
     const fetchId = async () => {
       const results: any = await getModulesBoxCountNoData(module.epcId);
       setBox(results);
+      console.log('this is box getModulesBoxCountNoData', results);
     };
-
     fetchId();
   }, [module.epcId]);
 
@@ -42,6 +50,11 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
   };
 
   const textColor = getContrastingColor(module.colorHex);
+
+  // Separate BOX and non-BOX items
+  const boxItems = box.filter(item => item.UNIT === 'BOX');
+  const nonBoxItems = box.filter(item => item.UNIT !== 'BOX');
+
   const renderBox = ({item}: {item: any}) => (
     <TouchableOpacity
       onPress={() => handleBox(item.CC_NO)}
@@ -60,14 +73,37 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
 
       <View style={styles.flatListContainer}>
         <Text style={styles.totalBoxes}>Total Boxes: {module.boxQuantity}</Text>
-        <FlatList
-          data={box}
-          renderItem={renderBox}
-          keyExtractor={item => item.toString()}
-          numColumns={7}
-          scrollEnabled={true}
-          contentContainerStyle={styles.boxesContainer}
-        />
+        <ScrollView
+          horizontal={false}
+          contentContainerStyle={styles.scrollViewContent}>
+          {boxItems.length > 0 && (
+            <FlatList
+              data={boxItems}
+              renderItem={renderBox}
+              keyExtractor={(_, index) => `box-${index}`}
+              numColumns={7}
+              scrollEnabled={false} // Disable scrolling within FlatList
+              contentContainerStyle={styles.boxesContainer}
+            />
+          )}
+          {nonBoxItems.length > 0 && (
+            <ScrollView horizontal={true} style={styles.nonBoxContainer}>
+              {nonBoxItems.map((item, index) => (
+                <TouchableOpacity
+                  key={`nonbox-${index}`}
+                  onPress={() => handleBox(item.CC_NO)}>
+                  <Text
+                    style={[
+                      styles.nonBoxText,
+                      {color: textColor, backgroundColor: module.colorHex},
+                    ]}>
+                    {item.UNIT} - {item.CC_NO}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
+        </ScrollView>
       </View>
 
       <TouchableOpacity
@@ -93,7 +129,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    height: 200,
+    height: 240,
   },
   moduleName: {
     fontSize: 16,
@@ -108,13 +144,19 @@ const styles = StyleSheet.create({
     color: Color.secondary,
   },
   flatListContainer: {
-    height: 82,
-    marginBottom: 10,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   boxesContainer: {
     marginBottom: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   box: {
     width: 35,
@@ -128,14 +170,29 @@ const styles = StyleSheet.create({
     color: Color.primary,
     fontWeight: 'bold',
   },
+  nonBoxContainer: {
+    flex: 1,
+    marginVertical: 8,
+    gap: 10,
+    paddingHorizontal: 10,
+  },
+  nonBoxText: {
+    fontSize: 14,
+    height: 35,
+    marginBottom: 4,
+    textAlign: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    fontWeight: 'bold',
+  },
   checkButton: {
-    backgroundColor: '#007AFF',
     borderRadius: 10,
     padding: 12,
     alignItems: 'center',
   },
   checkButtonText: {
-    color: 'black',
     fontWeight: 'bold',
   },
 });

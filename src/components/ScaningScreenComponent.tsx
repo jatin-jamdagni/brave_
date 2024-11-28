@@ -12,9 +12,9 @@ import {useNavigation} from '@react-navigation/native';
 import {Color} from '../constants/color';
 
 const instructions = [
-  {step: 'Pick the box you want to scan'},
-  {step: 'Place the box in a well-lit area'},
-  {step: 'Ensure the box is 10 feet away from other objects'},
+  {step: 'Hold the HHT in your hand'},
+  {step: 'Press the trigger to start scanning'},
+  {step: 'Unhold the trigger to stop scanning'},
 ];
 
 function Card() {
@@ -70,7 +70,10 @@ const ScanningScreenComponent = ({
           <Text
             style={[
               styles.doneButtonText,
-              {color: isScannedData ? Color.black : Color.primary},
+              {
+                color: isScannedData ? Color.black : Color.primary,
+                fontWeight: 'bold',
+              },
             ]}>
             {isScannedData ? 'Press Trigger To start Scan' : 'View Data'}
           </Text>

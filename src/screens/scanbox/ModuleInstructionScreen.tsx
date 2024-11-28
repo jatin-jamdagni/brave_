@@ -26,8 +26,8 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
       title: 'Scan Module',
       imageSource: IMAGE.scanModuleInstruction1,
       instructions: [
-        {step: 'Pick the box you want to scan'},
-        {step: 'Place the box in a well-lit area'},
+        {step: 'Pick the module you want to scan'},
+        {step: 'Place the module in a well-lit area'},
       ],
       backLabel: 'Exit',
       nextLabel: 'Next',
@@ -37,8 +37,8 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
       title: 'Position the Module',
       imageSource: IMAGE.scanModuleInstruction2,
       instructions: [
-        {step: 'Ensure the box is 10 feet away from other objects'},
-        {step: 'Center the box in your camera view'},
+        {step: 'Ensure the module is 10 feet away from other objects'},
+        {step: 'Place the module on a flat surface'},
       ],
       backLabel: 'Previous',
       nextLabel: 'Continue',
@@ -47,8 +47,8 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
       title: 'Position the Module',
       videoSource: IMAGE.scanModuleInstruction3,
       instructions: [
-        {step: 'Ensure the box is 10 feet away from other objects'},
-        {step: 'Center the box in your camera view'},
+        {step: 'Hold the HHT in your hand'},
+        {step: 'Point the HHT at the module'},
       ],
       backLabel: 'Previous',
       nextLabel: 'Finish',
@@ -60,7 +60,7 @@ const ModuleInstructionScreen = ({navigation}: {navigation: any}) => {
     <AppWrapper>
       <View style={styles.container}>
         <Text style={styles.title}>Scan Entire Module</Text>
-        <Text style={styles.subTitle}>Something Should be Here</Text>
+        <Text style={styles.subTitle}>Please read the instructions</Text>
       </View>
       <InstructionsCarousel items={carouselItems} />
     </AppWrapper>

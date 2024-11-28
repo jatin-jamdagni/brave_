@@ -2,15 +2,14 @@ import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   FlatList,
   StyleSheet,
   ListRenderItem,
 } from 'react-native';
 import {ModuleTypes} from '../../types';
-import {IMAGE} from '../../constants/images';
 import {getContrastingColor} from '../../hooks/useContrastingColor';
+import {Color} from '../../constants/color';
 
 type ModuleSelectorProps = {
   modules: ModuleTypes[];
@@ -34,17 +33,13 @@ export default function ModuleSelector({
   const renderModule: ListRenderItem<ModuleTypes> = useCallback(
     ({item}) => {
       const textColor = getContrastingColor(item.colorHex);
-
       return (
         <TouchableOpacity
           key={item.arrangeIndex}
           onPress={() => toggleModule(item.epcId)}
           style={[
             styles.moduleItem,
-            {
-              backgroundColor: item.colorHex,
-            },
-            ,
+            {backgroundColor: item.colorHex},
             selectedModules.includes(item.epcId) && styles.selectedModule,
           ]}
           accessibilityRole="checkbox"
@@ -56,9 +51,9 @@ export default function ModuleSelector({
             <Text style={[styles.moduleName, {color: textColor}]}>
               {item.name}
             </Text>
-            <Text style={[styles.moduleDescription, {color: textColor}]}>
+            {/* <Text style={[styles.moduleDescription, {color: textColor}]}>
               {item.description}
-            </Text>
+            </Text> */}
           </View>
         </TouchableOpacity>
       );
@@ -68,10 +63,15 @@ export default function ModuleSelector({
 
   const keyExtractor = useCallback((item: ModuleTypes) => item.id, []);
 
+  // Sort modules by arrangeIndex
+  const sortedModules = [...modules].sort(
+    (a, b) => parseInt(a.arrangeIndex) - parseInt(b.arrangeIndex),
+  );
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={modules.slice(0, 9)}
+        data={sortedModules}
         renderItem={renderModule}
         keyExtractor={keyExtractor}
         numColumns={1}
@@ -80,8 +80,12 @@ export default function ModuleSelector({
       />
       <View style={styles.contentContainer}>
         <View style={styles.selectedTextContainer}>
-          <Text style={styles.selectedCount}>Total modules selected:</Text>
-          <Text style={styles.selectedCount}>{selectedModules.length}</Text>
+          <Text style={[styles.selectedCount, {color: Color.lightGray}]}>
+            Total modules selected:
+          </Text>
+          <Text style={[styles.selectedCount, {color: Color.accent}]}>
+            {selectedModules.length}
+          </Text>
         </View>
         <TouchableOpacity
           style={[
@@ -111,16 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     elevation: 2,
-    height: 90,
-    // shadowColor: '#000',
-    // shadowOffset: {width: 0, height: 2},
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4,
-  },
-  moduleImage: {
-    width: 80,
     height: 60,
-    borderRadius: 10,
   },
   textContainer: {
     flex: 1,
@@ -131,12 +126,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginLeft: 16,
-    color: 'white',
   },
   moduleDescription: {
     marginTop: 4,
     fontSize: 16,
-    color: '#f8f8f8',
     marginLeft: 16,
     fontWeight: '400',
   },
@@ -145,22 +138,19 @@ const styles = StyleSheet.create({
   },
   selectedModule: {
     borderWidth: 3,
-    borderColor: '#007AFF',
+    borderColor: Color.white,
   },
   selectedTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    gap: 20,
     marginHorizontal: 16,
-    // marginTop: 1,
-
-    // padding: 10,
   },
   selectedCount: {
     marginTop: 20,
     fontSize: 18,
     textAlign: 'center',
-    color: '#555',
     fontWeight: '500',
   },
   startButton: {

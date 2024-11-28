@@ -35,10 +35,10 @@ export default function OnboardingScreen({navigation}: {navigation: any}) {
       <View style={styles.contentContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.title} numberOfLines={2}>
-            MODULAR PHC UNIT
+            MODULAR TAC UNIT
           </Text>
           <Text style={styles.subtitle} numberOfLines={2}>
-            RFID app for the modular PHC Unit
+            RFID app for the Modular TAC Unit
           </Text>
         </View>
 

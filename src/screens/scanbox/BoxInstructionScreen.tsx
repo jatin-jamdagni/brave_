@@ -4,6 +4,7 @@ import {IMAGE} from '../../constants/images';
 import {StyleSheet, Text, View} from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
 import {useModuleStore} from '../../store/entireModuleStore';
+import {Color} from '../../constants/color';
 
 const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
   const {setEpcid} = useModuleStore();
@@ -37,7 +38,7 @@ const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
       imageSource: IMAGE.singleBoxInstruction2,
       instructions: [
         {step: 'Ensure the box is 10 feet away from other objects'},
-        {step: 'Center the box in your camera view'},
+        {step: 'Place the box on a flat surface'},
       ],
       backLabel: 'Previous',
       nextLabel: 'Continue',
@@ -47,8 +48,8 @@ const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
       videoSource: IMAGE.singleBoxInstruction3,
 
       instructions: [
-        {step: 'Ensure the box is 10 feet away from other objects'},
-        {step: 'Center the box in your camera view'},
+        {step: 'Hold the HHT in your hand'},
+        {step: 'Point the HHT at the box'},
       ],
       backLabel: 'Previous',
       nextLabel: 'Finish',
@@ -60,7 +61,7 @@ const BoxInstructionScreen = ({navigation}: {navigation: any}) => {
     <AppWrapper>
       <View style={styles.container}>
         <Text style={styles.title}>Scan Single Box</Text>
-        <Text style={styles.subTitle}>Something Should be Here</Text>
+        <Text style={styles.subTitle}>Please read the instructions</Text>
       </View>
       <InstructionsCarousel items={carouselItems} />
     </AppWrapper>
@@ -74,6 +75,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
   },
-  title: {fontSize: 18, fontWeight: 'bold', color: '#333333', marginBottom: 6},
-  subTitle: {fontSize: 16, color: '#99aaa9', fontWeight: '500'},
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Color.primary,
+    marginBottom: 6,
+  },
+  subTitle: {fontSize: 16, color: Color.lightGray, fontWeight: '500'},
 });

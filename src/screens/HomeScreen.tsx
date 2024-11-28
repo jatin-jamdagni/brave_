@@ -26,8 +26,8 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
     <AppWrapper>
       <BackHeader
         onPress={handleLogout}
-        subTitle="hii User,"
-        title="Welcome Back!"
+        subTitle="Mumbai Modular TAC Unit,"
+        title="Welcome Back"
         buttonLabel="Logout"
       />
 

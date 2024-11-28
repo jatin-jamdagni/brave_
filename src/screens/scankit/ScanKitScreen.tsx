@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import InstructionsCarousel from '../../components/carousel/InstructionsCarousel';
 import {IMAGE} from '../../constants/images';
 import {StyleSheet, Text, View} from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
+import {useModuleStore} from '../../store/entireModuleStore';
+import {Color} from '../../constants/color';
 
 const ScanKitInstructions = ({navigation}: {navigation: any}) => {
   const goBack = () => {
@@ -15,13 +17,19 @@ const ScanKitInstructions = ({navigation}: {navigation: any}) => {
     });
   };
 
+  const {setEpcid} = useModuleStore();
+
+  useEffect(() => {
+    setEpcid([]);
+  }, []);
+
   const carouselItems = [
     {
       title: 'Scan Kit',
       imageSource: IMAGE.ScanKitInstruction1,
       instructions: [
         {step: 'Pick the Kit you want to scan'},
-        {step: 'Place the Kit in a well-lit area'},
+        {step: 'Place the Kit in a well-lit area or in hand'},
       ],
       backLabel: 'Exit',
       nextLabel: 'Next',
@@ -44,7 +52,7 @@ const ScanKitInstructions = ({navigation}: {navigation: any}) => {
     <AppWrapper>
       <View style={styles.container}>
         <Text style={styles.title}>Scan Kit</Text>
-        <Text style={styles.subTitle}>Something Should be Here</Text>
+        <Text style={styles.subTitle}>Please read the instructions</Text>
       </View>
       <InstructionsCarousel items={carouselItems} />
     </AppWrapper>
@@ -58,6 +66,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
   },
-  title: {fontSize: 18, fontWeight: 'bold', color: '#333333', marginBottom: 6},
-  subTitle: {fontSize: 16, color: '#99aaa9', fontWeight: '500'},
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Color.primary,
+    marginBottom: 6,
+  },
+  subTitle: {fontSize: 16, color: Color.lightGray, fontWeight: '500'},
 });

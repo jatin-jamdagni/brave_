@@ -15,6 +15,7 @@ interface BoxData {
   boxNumber: number;
   color: string;
   isFound: boolean;
+  unit: string;
 }
 
 interface BoxProps {
@@ -37,7 +38,34 @@ const Box: React.FC<BoxProps> = ({data, onPress}) => {
       ]}
       disabled={!data.isFound}
       onPress={() => onPress(data.id)}>
-      <Text style={[styles.boxText, {color: textColor}]}>{data.boxNumber}</Text>
+      <Text style={[styles.boxText, {color: textColor}]}>
+        {data.unit === 'BOX' ? data.boxNumber : data.unit}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const Box2: React.FC<BoxProps> = ({data, onPress}) => {
+  const textColor = getContrastingColor(data.color);
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.box,
+        {
+          width: 100,
+          backgroundColor: data.isFound
+            ? data.color
+            : fadeColor(data.color, 0.5), // Faded color for missing/expired
+        },
+      ]}
+      disabled={!data.isFound}
+      onPress={() => onPress(data.id)}>
+      <Text style={[styles.boxText, {color: textColor}]}>
+        {data.unit === 'BOX'
+          ? data.boxNumber
+          : `${data.unit} - ${data.boxNumber}`}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -55,14 +83,29 @@ interface UnitBoxGridProps {
 }
 
 export default function ScannedUnitCard({boxes, onBoxPress}: UnitBoxGridProps) {
+  // Separate boxes into two groups: "BOX" units and others
+  const boxUnits = boxes.filter(box => box.unit === 'BOX');
+  const otherUnits = boxes.filter(box => box.unit !== 'BOX');
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Scanned Unit</Text>
       <Text style={styles.subtitle}>Click on any box to view its details</Text>
-      <View style={styles.scrollContainer}>
-        <ScrollView contentContainerStyle={styles.gridContainer}>
-          {boxes.map(boxData => (
+      <View style={{flex: 1}}>
+        <ScrollView
+          contentContainerStyle={styles.gridContainer}
+          horizontal={false} // Default vertical scrolling
+        >
+          {boxUnits.map(boxData => (
             <Box key={boxData.id} data={boxData} onPress={onBoxPress} />
+          ))}
+        </ScrollView>
+        <ScrollView
+          contentContainerStyle={styles.gridContainer}
+          horizontal // Enable horizontal scrolling for other units
+        >
+          {otherUnits.map(boxData => (
+            <Box2 key={boxData.id} data={boxData} onPress={onBoxPress} />
           ))}
         </ScrollView>
       </View>
@@ -74,6 +117,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     marginTop: 10,
+    flex: 1, // Ensures the container takes up available space
   },
   title: {
     fontSize: 24,
@@ -89,7 +133,7 @@ const styles = StyleSheet.create({
     color: Color.secondary,
   },
   scrollContainer: {
-    height: 390, // Fixed height for scrollable grid
+    flex: 1, // Allows the scroll container to grow with available space
     borderWidth: 2,
     borderColor: '#007AFF',
     borderRadius: 10,
@@ -99,22 +143,25 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around', // Distributes space evenly
+    alignItems: 'center', // Aligns items vertically
+    paddingVertical: 10,
   },
   box: {
-    margin: 5,
+    margin: 8, // Increased margin for better spacing
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ddd',
-    width: 50,
-    height: 50,
+    width: 60, // Larger width for better visibility
+    height: 60, // Larger height for better visibility
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Color.primary,
   },
   boxText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14, // Adjusted font size for better readability
     fontWeight: 'bold',
+    textAlign: 'center', // Ensures text is centered
   },
 });

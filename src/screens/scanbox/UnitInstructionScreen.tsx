@@ -4,6 +4,7 @@ import {IMAGE} from '../../constants/images';
 import {StyleSheet, Text, View} from 'react-native';
 import AppWrapper from '../../components/AppWrapper';
 import {useModuleStore} from '../../store/entireModuleStore';
+import {Color} from '../../constants/color';
 
 const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
   const {setEpcid} = useModuleStore();
@@ -25,8 +26,8 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
       title: 'Scan Unit',
       imageSource: IMAGE.scanUnitInstruction1,
       instructions: [
-        {step: 'Pick the box you want to scan'},
-        {step: 'Place the box in a well-lit area'},
+        {step: 'Pick the Unit you want to scan'},
+        {step: 'Place the Unit in a well-lit area'},
       ],
       backLabel: 'Exit',
       nextLabel: 'Next',
@@ -36,8 +37,8 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
       title: 'Position the Unit',
       imageSource: IMAGE.scanUnitInstruction2,
       instructions: [
-        {step: 'Ensure the box is 10 feet away from other objects'},
-        {step: 'Center the box in your camera view'},
+        {step: 'Ensure the Unit is 10 feet away from other objects'},
+        {step: 'Place the Unit on a flat surface'},
       ],
       backLabel: 'Previous',
       nextLabel: 'Continue',
@@ -46,8 +47,8 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
       title: 'Position the Unit',
       videoSource: IMAGE.scanUnitInstruction3,
       instructions: [
-        {step: 'Ensure the box is 10 feet away from other objects'},
-        {step: 'Center the box in your camera view'},
+        {step: 'Hold the HHT in your hand'},
+        {step: 'Point the HHT at the Unit'},
       ],
       backLabel: 'Previous',
       nextLabel: 'Finish',
@@ -59,7 +60,7 @@ const UnitInstructionScreen = ({navigation}: {navigation: any}) => {
     <AppWrapper>
       <View style={styles.container}>
         <Text style={styles.title}>Scan Entire Unit</Text>
-        <Text style={styles.subTitle}>Something Should be Here</Text>
+        <Text style={styles.subTitle}>Please read the instructions</Text>
       </View>
       <InstructionsCarousel items={carouselItems} />
     </AppWrapper>
@@ -74,6 +75,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
   },
-  title: {fontSize: 18, fontWeight: 'bold', color: '#333333', marginBottom: 6},
-  subTitle: {fontSize: 16, color: '#99aaa9', fontWeight: '500'},
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Color.primary,
+    marginBottom: 6,
+  },
+  subTitle: {fontSize: 16, color: Color.lightGray, fontWeight: '500'},
 });

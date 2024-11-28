@@ -39,7 +39,7 @@ const UnitTableScreen = ({navigation}: {navigation: any}) => {
   return (
     <CustomizableTableComponent
       title="Scanned Unit Table"
-      subtitle="These are expired kits in the Entire Unit"
+      subtitle="These are expired and missing kits in the Entire Unit"
       columns={columns}
       data={tableData}
       onDone={() => navigation.navigate('HOME')}

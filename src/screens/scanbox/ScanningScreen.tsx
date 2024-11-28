@@ -10,26 +10,27 @@ import AppWrapper from '../../components/AppWrapper';
 import ScanningScreenComponent from '../../components/ScaningScreenComponent';
 import {useModuleStore} from '../../store/entireModuleStore';
 import useUHFScanner from '../../hooks/useUHF';
+import {Color} from '../../constants/color';
 
 const ScanningScreen = ({route}: any) => {
   const {toView} = route.params;
-  const {scannedData} = useUHFScanner();
+  const {scannedData, loading} = useUHFScanner();
   const {setEpcid} = useModuleStore();
 
   // const [uniqueScannedData, setUniqueScannedData] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (scannedData.length > 0) {
-      setLoading(true);
+      setIsLoading(true);
 
       if (loadingTimeoutRef.current) {
         clearTimeout(loadingTimeoutRef.current);
       }
 
       loadingTimeoutRef.current = setTimeout(() => {
-        setLoading(false);
+        setIsLoading(false);
       }, 200);
     }
   }, [scannedData]);
@@ -49,8 +50,17 @@ const ScanningScreen = ({route}: any) => {
   return (
     <AppWrapper>
       <View style={styles.container}>
+        {scannedData.length !== 0 && (
+          <View
+            style={[styles.loadingContainer, {backgroundColor: 'transparent'}]}>
+            <Text style={{color: Color.lightGray, fontWeight: 'bold'}}>
+              Total Scanned:{'  '}
+              <Text style={{color: Color.primary}}>{scannedData.length}</Text>
+            </Text>
+          </View>
+        )}
         {/* Activity Indicator */}
-        {loading && (
+        {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#fff" />
             <Text style={styles.countText}>

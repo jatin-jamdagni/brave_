@@ -288,7 +288,7 @@ export const clearDatabaseTables = async () => {
 export const getModulesBoxCountNoData = async (moduleId: string) => {
   return new Promise(async (resolve, reject) => {
     (await db).transaction(tx => {
-      const query = `SELECT CC_NO, MC_EPC FROM main_master_data WHERE MC_EPC = '${moduleId}' GROUP BY MC_EPC, CC_NO;`;
+      const query = `SELECT CC_NO, UNIT, MC_EPC FROM main_master_data WHERE MC_EPC = '${moduleId}' GROUP BY MC_EPC, CC_NO;`;
       const result: any = [];
       tx.executeSql(
         query,
@@ -380,18 +380,19 @@ export const getScannedUnitBoxesDataFromMainMaster = async (
           all_cc.CC_EPCNO AS ccepc,
           all_cc.MC_EPC AS mcepc,
           m.moduleColor AS color,
+          all_cc.UNIT AS unit,
           CASE 
               WHEN mm.PACK_EPC IS NULL THEN 'missing'
               WHEN DATE(mm.PACK_EXPIRY) < DATE('now') OR DATE(mm.BATCH_EXPIRY) < DATE('now') THEN 'expired'
               ELSE 'active'
           END AS status
       FROM (
-          SELECT DISTINCT CC_NO, CC_NAME, CC_EPCNO, MC_EPC
+          SELECT DISTINCT CC_NO, CC_NAME, CC_EPCNO, MC_EPC, UNIT
           FROM main_master_data
       ) all_cc
       LEFT JOIN main_master_data mm ON all_cc.CC_NO = mm.CC_NO AND mm.PACK_EPC IN (${formattedEpcIds})
       LEFT JOIN main_module_data m ON all_cc.MC_EPC = m.moduleEPC
-      GROUP BY all_cc.CC_NO
+      GROUP BY all_cc.CC_NO, all_cc.UNIT
       ORDER BY all_cc.CC_NO;
     `;
       const result: any = [];

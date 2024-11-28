@@ -27,6 +27,8 @@ const ModuleScannedScreen = ({navigation}: {navigation: any}) => {
 
   const data = getSelectedModule(modules);
 
+  console.log('this is module data', data);
+
   const moduleEpcIds = data.map(item => item.epcId);
 
   const handleCheckModule = (id: string) => {
@@ -38,8 +40,8 @@ const ModuleScannedScreen = ({navigation}: {navigation: any}) => {
   return (
     <AppWrapper>
       <DataHeader
-        subTitle="Something also neeed here"
-        title="Scaned Module Box"
+        subTitle="These are the modules that you have scanned"
+        title="Scanned Module Box"
       />
       <FlatList
         data={data}

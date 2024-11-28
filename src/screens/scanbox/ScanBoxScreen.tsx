@@ -27,7 +27,7 @@ const ScanBoxScreen = ({navigation}: {navigation: any}) => {
       <BackHeader
         onPress={handleGoBack}
         title="Scan box"
-        subTitle="Something also need here..."
+        subTitle="Scan box, Module and Unit"
         buttonLabel="Back"
       />
       <ScrollView contentContainerStyle={styles.container}>

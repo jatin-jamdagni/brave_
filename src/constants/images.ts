@@ -1,5 +1,5 @@
 import PlaceholderImage from '../assets/images/placeholder-image.png';
-import LightLogo from '../assets/images/logo_light.png';
+import DarkLogo from '../assets/images/logo_dark.png';
 import LoginImage from '../assets/images/Landing.jpeg';
 // import Login from '../assets/images/file.png';
 
@@ -33,7 +33,7 @@ import scanModuleInstruction3 from '../assets/instructions/scanModuleInstruction
 
 export const IMAGE = {
   PlaceholderImage,
-  LightLogo,
+  DarkLogo,
   LoginImage,
   RealLanding,
   RealLogin,

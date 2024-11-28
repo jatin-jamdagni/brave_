@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {View, Image, StyleSheet, Animated} from 'react-native';
 import {IMAGE} from '../../constants/images';
+import {Color} from '../../constants/color';
 
 const SplashScreen = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -16,7 +17,7 @@ const SplashScreen = () => {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.content, {opacity: fadeAnim}]}>
-        <Image source={IMAGE.LightLogo} style={styles.logo} />
+        <Image source={IMAGE.DarkLogo} style={styles.logo} />
         {/* <MadeWithLove /> */}
         <View style={styles.loadingContainer}>
           <View style={styles.loadingDot} />
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: Color.black,
   },
   content: {
     alignItems: 'center',

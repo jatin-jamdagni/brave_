@@ -23,7 +23,7 @@ const ScanAndIdentify = ({navigation}: {navigation: any}) => {
       <BackHeader
         onPress={handleLogout}
         title="Scan and Identify"
-        subTitle="Something also need here..."
+        subTitle="Scan boxes and Scan Kit"
         buttonLabel="Back"
       />
       <ScrollView contentContainerStyle={styles.container}>
