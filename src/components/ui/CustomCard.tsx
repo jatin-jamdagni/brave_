@@ -28,7 +28,6 @@ export default function CustomCard({
   imageSource,
   title,
   subtitle,
-
   onPress,
   buttonTitle,
 }: CustomCardProps) {
@@ -36,7 +35,7 @@ export default function CustomCard({
     <View style={styles.card}>
       <Image
         source={imageSource}
-        style={[styles.image, subtitle ? {} : {height: 110}]}
+        style={[styles.image, subtitle ? {} : {height: 115,}]}
       />
       <View style={styles.contentContainer}>
         <View style={styles.textContainer}>

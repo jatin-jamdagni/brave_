@@ -45,6 +45,8 @@ export default function ScanKitData({navigation}: {navigation: any}) {
     const fetch = async () => {
       const response: ResponseData[] | any =
         await getSingleKitFromUnitFromMainMaster(epcId);
+
+        console.log("this is response form the app for the kit scan",response )
       if (response && response.length > 0) {
         const processedKits = processResponseData(response);
         setKits(processedKits);

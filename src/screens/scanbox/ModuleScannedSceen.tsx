@@ -27,8 +27,7 @@ const ModuleScannedScreen = ({navigation}: {navigation: any}) => {
 
   const data = getSelectedModule(modules);
 
-  console.log('this is module data', data);
-
+ 
   const moduleEpcIds = data.map(item => item.epcId);
 
   const handleCheckModule = (id: string) => {

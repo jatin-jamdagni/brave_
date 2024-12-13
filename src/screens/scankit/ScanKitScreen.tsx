@@ -37,7 +37,7 @@ const ScanKitInstructions = ({navigation}: {navigation: any}) => {
     },
     {
       title: 'Scan Kit',
-      imageSource: IMAGE.ScanKitInstruction2,
+      imageSource: IMAGE.KitImage,
       instructions: [
         {step: 'Hold your device steady'},
         {step: 'Tap the scan button when ready'},

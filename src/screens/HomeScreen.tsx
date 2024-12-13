@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 15,
   },
-  imageStyle: {height: 120, objectFit: 'scale-down', width: 'auto'},
+  imageStyle: {height: 100, objectFit: 'scale-down', width: 'auto'},
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

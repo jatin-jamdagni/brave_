@@ -15,10 +15,7 @@ const UnitScannedScreen = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     const fetch = async () => {
       const result: any = await getScannedUnitBoxesDataFromMainMaster(epcId);
-      console.log(
-        'this is result getScannedUnitBoxesDataFromMainMaster',
-        result,
-      );
+      
       const transformedBoxes = result
         .sort((a: any, b: any) => a.mcepc.localeCompare(b.mcepc))
         .map((box: any) => ({

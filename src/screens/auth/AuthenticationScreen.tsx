@@ -49,7 +49,7 @@ const AuthenticationScreen = () => {
 
   return (
     <View style={styles.card}>
-      <Image source={IMAGE.RealLanding} style={styles.image} />
+      <Image source={IMAGE.RealLogin} style={styles.image} />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Welcome back!</Text>
         <Text style={styles.subtitle}>

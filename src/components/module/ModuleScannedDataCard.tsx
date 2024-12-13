@@ -38,8 +38,7 @@ const ModuleScannedDataCard: React.FC<ModuleScannedDataCardProps> = ({
     const fetchId = async () => {
       const results: any = await getModulesBoxCountNoData(module.epcId);
       setBox(results);
-      console.log('this is box getModulesBoxCountNoData', results);
-    };
+     };
     fetchId();
   }, [module.epcId]);
 

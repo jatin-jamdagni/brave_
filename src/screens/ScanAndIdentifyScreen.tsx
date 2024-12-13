@@ -46,6 +46,9 @@ const ScanAndIdentify = ({navigation}: {navigation: any}) => {
           imageStyle={styles.imageStyle}
         />
       </ScrollView>
+
+
+       
     </AppWrapper>
   );
 };

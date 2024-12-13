@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imageStyle: {height: 100, backgroundColor: Color.darkGray},
+  imageStyle: {height: 110, backgroundColor: Color.darkGray},
 });
 
 export default ScanBoxScreen;

@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import OnboardingScreen from '../screens/auth/OnboardingScreen';
 import HomeScreen from '../screens/HomeScreen';
-import {ScanAndIdentifyStackNavigator} from './ScanAndIdentifyNavigator';
-import {DispensoryStackNavigator} from './DispensoryNavigation';
+import { ScanAndIdentifyStackNavigator } from './ScanAndIdentifyNavigator';
+import { DispensoryStackNavigator } from './DispensoryNavigation';
 import SplashScreen from '../screens/auth/SplashScreen';
 import AuthenticationScreen from '../screens/auth/AuthenticationScreen';
-import {useAuth} from '../hooks/useAuth';
-import LoadingScreen from '../screens/LoadingScreen';
-import UHFReloadSuccess from '../sdk/medicineUse';
+import { useAuth } from '../hooks/useAuth';
+// import LoadingScreen from '../screens/LoadingScreen';
+// import UHFReloadSuccess from '../sdk/medicineUse';
 
 type RootStackParamList = {
   ONBOARDING: undefined;
@@ -24,7 +24,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigation = () => {
   const [loading, setLoading] = useState(true);
-  const {userToken, isLoading, logout} = useAuth();
+  const { userToken, isLoading, logout } = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,25 +37,25 @@ const AppNavigation = () => {
   if (loading) {
     return <SplashScreen />;
   }
+  /////////////////////////////////////////////////////////////////////////////// DARE TO TOUCH  //////////////////////////////////////////////////////////////
+  // const onStateChangeHandler = async () => {
+  //   const isNavigation = await UHFReloadSuccess();
 
-  const onStateChangeHandler = async () => {
-    const isNavigation = await UHFReloadSuccess();
-
-    if (isNavigation) {
-      logout();
-    }
-  };
-
+  //   if (isNavigation) {
+  //     logout();
+  //   }
+  // };
+  // onStateChange={onStateChangeHandler}
   // onStateChange = {onStateChangeHandler};
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer onStateChange={onStateChangeHandler}>
+      <NavigationContainer>
         <RootStack.Navigator
           screenOptions={{
             headerShown: false,
             animation: 'none',
-            contentStyle: {backgroundColor: 'white'},
+            contentStyle: { backgroundColor: 'white' },
           }}>
           {userToken ? (
             <>

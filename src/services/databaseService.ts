@@ -548,53 +548,125 @@ export const getCompleteUnitDataFromMainMaster = async (epcIDS: string[]) => {
   });
 };
 
+// export const getSingleKitFromUnitFromMainMaster = async (epcIDS: string[]) => {
+//   // const formattedEpcIds = epcIDS.map(id => `'${id}'`).join(', ');
+
+//   return new Promise(async (resolve, reject) => {
+//     (await db).transaction(tx => {
+//       const query = `
+//           SELECT 
+//           CC_NO,
+//           moduleColor as color,
+//           (SELECT SUM(SKU_QTY) 
+//           FROM main_master_data 
+//           WHERE PACK_NAME IN (
+//           SELECT DISTINCT PACK_NAME 
+//           FROM main_master_data 
+//           WHERE PACK_EPC = '${epcIDS[0]}'
+//           )
+//           ) AS TOTAL_QTY, 
+//           COUNT(DISTINCT PACK_EPC) AS QTY, 
+//           PACK_NAME
+//           FROM main_master_data LEFT JOIN main_module_data ON main_master_data.MC_EPC = main_module_data.moduleEPC
+//           WHERE PACK_NAME IN (
+//           SELECT DISTINCT PACK_NAME 
+//           FROM main_master_data 
+//           WHERE PACK_EPC = '${epcIDS[0]}'
+//           )
+//           GROUP BY CC_NO, PACK_NAME, moduleColor;
+//     `;
+
+//       const result: any = [];
+
+//       tx.executeSql(
+//         query,
+//         [],
+
+//         (_, secondResult) => {
+//           const secondRows = secondResult.rows;
+//           for (let i = 0; i < secondRows.length; ++i) {
+//             result.push(secondRows.item(i));
+//           }
+
+//           resolve(result);
+//         },
+//         (_, error) => {
+//           console.error('Error executing second query:', error);
+//           reject(error);
+//         },
+//       );
+//     });
+//   });
+// };
+
+
 export const getSingleKitFromUnitFromMainMaster = async (epcIDS: string[]) => {
-  // const formattedEpcIds = epcIDS.map(id => `'${id}'`).join(', ');
-
   return new Promise(async (resolve, reject) => {
-    (await db).transaction(tx => {
-      const query = `
-          SELECT 
-          CC_NO,
-          moduleColor as color,
-          (SELECT SUM(SKU_QTY) 
-          FROM main_master_data 
-          WHERE PACK_NAME IN (
-          SELECT DISTINCT PACK_NAME 
-          FROM main_master_data 
-          WHERE PACK_EPC = '${epcIDS[0]}'
-          )
-          ) AS TOTAL_QTY, 
-          COUNT(DISTINCT PACK_EPC) AS QTY, 
-          PACK_NAME
-          FROM main_master_data LEFT JOIN main_module_data ON main_master_data.MC_EPC = main_module_data.moduleEPC
-          WHERE PACK_NAME IN (
-          SELECT DISTINCT PACK_NAME 
-          FROM main_master_data 
-          WHERE PACK_EPC = '${epcIDS[0]}'
-          )
-          GROUP BY CC_NO, PACK_NAME, moduleColor;
-    `;
+    try {
+      const dbInstance = await db; // Assuming `db` is a Promise resolving the database instance
+      let result: any[] = [];
 
-      const result: any = [];
+      for (const epcID of epcIDS) {
+        await new Promise((resolveInner, rejectInner) => {
+          dbInstance.transaction(tx => {
+            const query = `
+              SELECT
+                CC_NO,
+                moduleColor as color,
+                (SELECT SUM(SKU_QTY)
+                 FROM main_master_data
+                 WHERE PACK_NAME IN (
+                   SELECT DISTINCT PACK_NAME
+                   FROM main_master_data
+                   WHERE PACK_EPC = '${epcID}'
+                 )) AS TOTAL_QTY,
+                COUNT(DISTINCT PACK_EPC) AS QTY,
+                PACK_NAME
+              FROM main_master_data
+              LEFT JOIN main_module_data ON main_master_data.MC_EPC = main_module_data.moduleEPC
+              WHERE PACK_NAME IN (
+                SELECT DISTINCT PACK_NAME
+                FROM main_master_data
+                WHERE PACK_EPC = '${epcID}'
+              )
+              GROUP BY CC_NO, PACK_NAME, moduleColor;
+            `;
 
-      tx.executeSql(
-        query,
-        [],
+            tx.executeSql(
+              query,
+              [],
+              (_, secondResult) => {
+                const secondRows = secondResult.rows;
+                for (let i = 0; i < secondRows.length; ++i) {
+                  result.push(secondRows.item(i));
+                }
 
-        (_, secondResult) => {
-          const secondRows = secondResult.rows;
-          for (let i = 0; i < secondRows.length; ++i) {
-            result.push(secondRows.item(i));
-          }
+                if (result.length > 0) {
+                  resolveInner(true); // Exit the current iteration
+                } else {
+                  resolveInner(false); // Continue to the next epcID
+                }
+              },
+              (_, error) => {
+                console.error('Error executing query for EPC:', epcID, error);
+                rejectInner(error);
+              }
+            );
+          });
+        });
 
-          resolve(result);
-        },
-        (_, error) => {
-          console.error('Error executing second query:', error);
-          reject(error);
-        },
-      );
-    });
+        if (result.length > 0) {
+          break; // Stop iterating if data is found
+        }
+      }
+
+      if (result.length > 0) {
+        resolve(result);
+      } else {
+        reject(new Error('No data found for any EPC ID.'));
+      }
+    } catch (error) {
+      reject(error);
+    }
   });
 };

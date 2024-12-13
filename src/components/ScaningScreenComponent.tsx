@@ -136,15 +136,18 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     borderRadius: 10,
-    width: '100%',
+    width: 250,
     overflow: 'hidden',
-    aspectRatio: 4 / 3,
+    height:230,
+    // aspectRatio: 4 / 3,
     marginBottom: 16,
+
   },
   image: {
     width: '100%',
     height: '100%',
     objectFit: 'contain',
+  
   },
   video: {
     width: '100%',
